@@ -12,8 +12,6 @@ library(plyr)
 
 #individuals_to_can <- candidates %>%
 #inner_join(individuals, by = c("cmte_id"))
-
-
 ```
 
 
@@ -40,17 +38,22 @@ require(lubridate)
 #select() selects specific columns from data frame
 #filter() filters rows that have CA as the state 
 
-ind_cont <- individuals %>%
+contributions_by_all <- individuals %>%
   mutate(transaction_date = mdy(transaction_dt)) %>%
   filter(state == "CA", 
+         entity_type == "PAC",
          transaction_date >= "2011-01-01",
          transaction_date <= "2011-12-31",
          transaction_amt >= 0 & transaction_amt <= 5000) %>%
+  inner_join(committees, by = "cmte_id") %>%
   select(transaction_type, 
          entity_type, 
          state, 
          transaction_date, 
-         transaction_amt) 
+         transaction_amt,
+         cmte_name) %>%
+  group_by(cmte_name)
+  
 ```
 
 
@@ -63,8 +66,6 @@ contributions_new <- function(data, state_arg, entity_type_arg){
            entity_type == entity_type_arg,
            transaction_date >= "2011-01-01" & transaction_date <= "2011-12-31",
            transaction_amt >= 0 & transaction_amt <= 5000) %>%
-    
-  
     select(transaction_date,
            state,
            entity_type,
@@ -73,7 +74,8 @@ contributions_new <- function(data, state_arg, entity_type_arg){
     return(new_data)
   }
 
-entity_data <- contributions_new(data = contributions, state_arg = "CA", entity_type_arg = "CCM")
+#contributions_new(data = contributions, state_arg = "CA", entity_type_arg = "PAC")
+entity_data <- contributions_new(data = contributions, state_arg = "CA", entity_type_arg = "PAC")
 glimpse(entity_data)
 
 #finds fthe frequency of each transaction type
