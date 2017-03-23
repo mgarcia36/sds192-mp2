@@ -1,0 +1,387 @@
+---
+title: "Mini Project 2"
+author: "Diana Fierros-Pina"
+date: "March 20, 2017"
+output: html_document
+---
+
+```{r, message=FALSE}
+library(tidyverse)
+library(ggthemes)
+library(plyr)
+
+#individuals_to_can <- candidates %>%
+#inner_join(individuals, by = c("cmte_id"))
+
+
+```
+
+
+```{r, include=FALSE}
+#load("house_elections.rda")
+#load("candidates.rda")
+#load("committees.rda")
+load("contributions.rda")
+load("individuals.rda")
+
+#head(individuals)
+
+
+```
+
+
+```{r}
+require(lubridate)
+
+#CREATES ERRORS!!!!!!!!!!
+
+#pipes individuals data into the new variable ind_cont
+#creates new variable transaction date into the data frame
+#select() selects specific columns from data frame
+#filter() filters rows that have CA as the state 
+
+ind_cont <- individuals %>%
+  mutate(transaction_date = mdy(transaction_dt)) %>%
+  filter(state == "CA", 
+         transaction_date >= "2011-01-01",
+         transaction_date <= "2011-12-31",
+         transaction_amt >= 0 & transaction_amt <= 5000) %>%
+  select(transaction_type, 
+         entity_type, 
+         state, 
+         transaction_date, 
+         transaction_amt) 
+```
+
+
+```{r}
+#FUNCTION USED + UPDATES------------------------------------------------
+contributions_new <- function(data, state_arg, entity_type_arg){
+  new_data <- data %>%
+    mutate(transaction_date = mdy(transaction_dt)) %>%
+    filter(state == state_arg,
+           entity_type == entity_type_arg,
+           transaction_date >= "2011-01-01" & transaction_date <= "2011-12-31",
+           transaction_amt >= 0 & transaction_amt <= 5000) %>%
+    
+  
+    select(transaction_date,
+           state,
+           entity_type,
+           transaction_type,
+           transaction_amt)
+    return(new_data)
+  }
+
+entity_data <- contributions_new(data = contributions, state_arg = "CA", entity_type_arg = "CCM")
+glimpse(entity_data)
+
+#finds fthe frequency of each transaction type
+most_common <- as.data.frame(table(unlist(entity_data$transaction_type)))
+class(most_common)
+#order(most_common$Freq)
+
+#dorts in descending order
+most_common[order(most_common$Freq, decreasing = TRUE), ]
+#glimpse(most_common)
+#-----------------------------------------------------------------------
+```
+
+```{r}
+#-------
+
+
+#+1 for annotating your data wrangling pipeline 
+#pipes contributions data into the new variable cont
+#filters out the entity type chosen by the user, or the hard coded example "CCM"
+#also filtered by giving a range of transaction_amt being from $0-$5000 and narrowing the data set down to California
+#select() choses specific columns from data frame such as transaction_type,entity_type,state,and transaction_amt
+#ggplot creates a histogram specifying that the x axis is based off of the tranaction_amt variable with 15 bins of monetary ammounts for donations.
+
+cont <- contributions %>%
+  mutate(transaction_date = mdy(transaction_dt)) %>%
+  filter(transaction_date >= "2011-01-01" & transaction_date <= "2011-12-31",
+         entity_type == "CCM",
+         transaction_amt >= 0 & transaction_amt <= 5000, 
+         state == "CA") %>%
+
+  select(transaction_type, 
+         entity_type, 
+         state, 
+         transaction_date, 
+         transaction_amt) 
+
+cont_2 <- cont %>%
+  summarise(n = n_distinct(transaction_type))
+
+```
+
+#+1 for explaining in a single coherent sentence what we can learn from these data
+#The main idea of this is to capture the most common monetary ammount crontributed to the 2011-2012 federal election cycle by political entities.
+
+
+
+#+1 blog post text provides context or background useful in interpreting the graphic
+#The following code creates a data visualization in the form of a histogram regarding contributions to the federal election cycle of 2011-2012. Here, the histogram presents 11 bins ranging from $0 of monetary contributions to $5000. The key of this visualization is to allow the user to explore the number of different values of the contributions made by political entities. The different political entities include contributions made by a candidate, a candidate committee, committee, individual, organization, politial action committee or a party organization. One example can be to explore the different number of contributions made by CCM's, or candidate commitees, where contributions of about $1000 were the most common. The data used in the visualization stems from the Federal Election Committee (FEC), whose statute limits the sources and amounts of the contributions used to finance federal elections and requires public disclosure of campaign finance information. This type of analysis is useful in helping regulate and predict what values are expected/common from a specific entity. This can assist if there is an unprecedented or extreme dip or spike in the average monetary contribution, where the FEC can then investigate if necessary.
+
+
+## New Information--------------------------------------
+A political action committee (PAC) is a type of organization that pools campaign contributions from members and donates those funds to campaign for or against candidates, ballot initiatives, or legislation.
+
+
+Common transaction types
+
+24K
+Contribution made to nonaffiliated committee
+
+24A
+Independent expenditure opposing election of candidate
+
+24Z
+In-kind contribution made to registered filer
+## ----------------------------------------------------
+
+```{r}
+
+ggplot(cont, aes(x = transaction_amt)) + 
+  ggtitle("Amount of contributors per donation amount") +
+
+  geom_histogram(bins = 11, color = "black", fill = "olivedrab") +
+  theme_hc() +
+  theme(axis.text.x = element_text(color = "black", 
+                           size = 12, family = "Trebuchet MS"),
+        axis.text.y = element_text(color = "black", 
+                           size = 12, family = "Trebuchet MS"),
+        axis.ticks.x = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank()
+        ) + 
+  # Transaction Amount x- axis
+  scale_x_continuous(name = "Donation Amount",
+                     expand = c(0,0),
+                     limits = c(0, 6000),
+                     labels = c("0" = "",
+                                "1000" = "$1000",
+                                "2000" = "$2000",
+                                "3000" = "$3000",
+                                "4000" = "$4000",
+                                "5000" = "$5000",
+                                "6000" = ""
+                                 )) +
+  # Count y-axis
+  scale_y_continuous(name = "Number of Contributors") 
+                  
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
