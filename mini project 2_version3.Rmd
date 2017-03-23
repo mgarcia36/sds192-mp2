@@ -58,6 +58,11 @@ contributions_by_all <- individuals %>%
   #summarise(transaction_amt = sum(transaction_amt))
   
 ```
+```{r}
+ggplot(contributions_by_all, aes(cmte_name, transaction_amt)) +
+  geom_bar(stat = "identity") 
+```
+
 
 
 ```{r}
