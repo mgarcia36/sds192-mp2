@@ -38,9 +38,10 @@ require(lubridate)
 #select() selects specific columns from data frame
 #filter() filters rows that have CA as the state 
 
+
 contributions_by_all <- individuals %>%
   mutate(transaction_date = mdy(transaction_dt)) %>%
-  filter(state == "CA", 
+  filter(state == "NY", 
          entity_type == "PAC",
          transaction_date >= "2011-01-01",
          transaction_date <= "2011-12-31",
@@ -51,8 +52,10 @@ contributions_by_all <- individuals %>%
          state, 
          transaction_date, 
          transaction_amt,
-         cmte_name) %>%
-  group_by(cmte_name)
+         cmte_name,
+         cmte_id) 
+  #group_by(cmte_id) %>%
+  #summarise(transaction_amt = sum(transaction_amt))
   
 ```
 
