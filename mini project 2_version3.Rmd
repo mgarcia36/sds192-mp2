@@ -27,7 +27,7 @@ load("individuals.rda")
 
 
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 
 #The following will make up the new data frame "contributions_by_all"
 #mutate() mutates variable "transaction_dt" from individuals data frame to new variable transaction date, so it is a 'date' type
@@ -57,19 +57,19 @@ contributions_by_all <- individuals %>%
 
 
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 ggplot(contributions_by_all, aes(cmte_name, transaction_amt)) +
   geom_bar(stat = "identity") 
 ```
 
-
+#-------------------------------------------
 ### Red State in 2011: Alaska (Diana)
-```{r}
-#The following will make up the new data frame "contributions_by_alaska"
-#mutate() mutates variable "transaction_dt" from individuals data frame to new variable transaction date, so it is a 'date' type
-#filter() filters rows that have the desired state, entity_type, transaction_date and transaction_amt
-#inner_join to join individuals and committees data frames by column "cmte_id"
-#select() selects specific columns from data frame that we're interested in
+```{r, message=FALSE, warning=FALSE}
+# The following will make up the new data frame "contributions_by_alaska"
+# mutate() mutates variable "transaction_dt" from individuals data frame to new variable transaction date, so it is a 'date' type
+# filter() filters rows that have the desired state, entity_type, transaction_date and transaction_amt
+# inner_join to join individuals and committees data frames by column "cmte_id"
+# select() selects specific columns from data frame that we're interested in
 
 
 contributions_by_alaska <- individuals %>%
@@ -94,25 +94,31 @@ tallying_alaska <- contributions_by_alaska %>%
 ```
 
 
-```{r}
+### +1 for explaining in a single coherent sentence what we can learn from these data
+The main idea of this bar chart, is to capture the top ten committees and the amount received (by each) from donations made by individuals in the state of Alaska during the 2011 federal election cycle. 
+
+During the 2011 federal election cycle, these were the top ten committees and the amount of money received, by each respectively, from donations made by individuals in the state of Alaska.
+```{r, fig.width = 15, fig.height = 10}
+
+# Using ggplot to generate bar plot of the "Top Ten Committees Donated to by Individuals in 2011"
 
 top_ten_cmte_alaska <- subset(contributions_by_alaska, cmte_name %in% tallying_alaska$cmte_name[0:10])
 
 ggplot(top_ten_cmte_alaska, aes(cmte_name, transaction_amt)) +
-  ggtitle("Top Ten Committees Donated to by Individuals in 2011") +
+  ggtitle("Committees that Received Contributions Made By Individuals in 2011") +
   geom_bar(stat = "identity", fill = "olivedrab") +
   theme_hc() +
   theme(axis.text.x = element_text(color = "black", 
-                           size = 10, family = "Trebuchet MS", angle = 90),
+                           size = 14, family = "Trebuchet MS", angle = 90, face = "bold"),
         axis.text.y = element_text(color = "black", 
-                           size = 10, family = "Trebuchet MS"),
+                           size = 14, family = "Trebuchet MS", face = "bold"),
         axis.ticks.x = element_blank(),
         axis.ticks.y = element_blank(),
         panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank()
-        ) + 
+        panel.grid.minor = element_blank(),
+        plot.title = element_text(lineheight = 1, face="bold")) + 
   # Committees x- axis
-  scale_x_discrete(name = "Donation Amount",
+  scale_x_discrete(name = "Recipients of Contributions",
                      expand = c(0,0),
                      labels = c("ACTBLUE" = "ACTBLUE",
                                 "ALASKA DEMOCRATIC PARTY" = "AK DEM. PARTY",
@@ -125,9 +131,9 @@ ggplot(top_ten_cmte_alaska, aes(cmte_name, transaction_amt)) +
                                 "ROMNEY FOR PRESIDENT INC." = "ROMNEY FOR PRESIDENT",
                                 "RON PAUL 2012 PRESIDENTIAL CAMPAIGN COMMITTEE INC." = "RON PAUL '12 PRES. CAMPAIGN"
                                  )) +
-  # Donation Amount y-axis
-  scale_y_continuous(name = "Total Amt. of Donations",
-                   labels = c("0" = "$0",
+  # Contribution Amount y-axis
+  scale_y_continuous(name = "Total Amt. of Contributions",
+                     labels = c("0" = "$0",
                               "25000" = "$25k",
                               "50000" = "$50k",
                               "75000" = "$75k",
@@ -138,25 +144,18 @@ ggplot(top_ten_cmte_alaska, aes(cmte_name, transaction_amt)) +
 ```
 
 
+### +1 blog post text provides context or background useful in interpreting the graphic
+
+The data visualization previously presented is a bar plot regarding the contributions made in the state of Alaska in the year 2011. Each bar represents one committee and the height of the bar represents the $ amount of all the contributions made by individuals. 
+The key of this visualization is to allow the user to explore the different committees. 
+The committees included are: Actblue, Alaska Democratic Party, Alaskans for Begich 2014, Alaskans for Don Young Inc., DNC (DNC Services Corporation/Democratic National Committee), Nat. Assoc. of Realtors (National Association of Realtors Political Action Committee), Obama for America, RNC (Republican National Committee), and Romney for President Inc., Ron Paul '12 Pres. Campaign.
+
+It's important to not that even though Alaska is a republican state 4 out of 10 of the committees (in this visualization) are Democrats, which are the Alaskan Democratic Party, Alaskans for Begich 2014, DNC and Obama for America. Although Actblue is independent of the Democratic Party itself and does not endorse individual candidates, this committee enables anyone to raise money on the Internet for the Democratic Party candidates of their choice. One of the committees is libertarian which is the committee named Ron Paul '12 Presidential Campaign. 
+
+So, even though Alaska is a republican state, there is a divide in idealogies throughout Alaskans in where they wish their contributions should go to.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#-------------------------------------------
 
 
 
