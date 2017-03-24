@@ -88,7 +88,7 @@ contributions_by_alaska <- individuals %>%
          cmte_name,
          cmte_id)
 
-top_ten_cmte <- contributions_by_alaska %>%
+tallying_alaska <- contributions_by_alaska %>%
   group_by(cmte_name) %>%
   tally(sort = TRUE)
 ```
@@ -96,10 +96,11 @@ top_ten_cmte <- contributions_by_alaska %>%
 
 ```{r}
 
-top_10 <- subset(contributions_by_alaska, cmte_name %in% top_ten_cmte$cmte_name[0:10])
+top_ten_cmte_alaska <- subset(contributions_by_alaska, cmte_name %in% tallying_alaska$cmte_name[0:10])
 
 ggplot(top_10, aes(cmte_name, transaction_amt)) +
-  geom_bar(stat = "identity") 
+  geom_bar(stat = "identity") +
+  coord_flip()
 ```
 
 
@@ -158,34 +159,6 @@ most_common[order(most_common$Freq, decreasing = TRUE), ]
 #-----------------------------------------------------------------------
 ```
 
-```{r}
-#-------
-
-
-#+1 for annotating your data wrangling pipeline 
-#pipes contributions data into the new variable cont
-#filters out the entity type chosen by the user, or the hard coded example "CCM"
-#also filtered by giving a range of transaction_amt being from $0-$5000 and narrowing the data set down to California
-#select() choses specific columns from data frame such as transaction_type,entity_type,state,and transaction_amt
-#ggplot creates a histogram specifying that the x axis is based off of the tranaction_amt variable with 15 bins of monetary ammounts for donations.
-
-cont <- contributions %>%
-  mutate(transaction_date = mdy(transaction_dt)) %>%
-  filter(transaction_date >= "2011-01-01" & transaction_date <= "2011-12-31",
-         entity_type == "CCM",
-         transaction_amt >= 0 & transaction_amt <= 5000, 
-         state == "CA") %>%
-
-  select(transaction_type, 
-         entity_type, 
-         state, 
-         transaction_date, 
-         transaction_amt) 
-
-cont_2 <- cont %>%
-  summarise(n = n_distinct(transaction_type))
-
-```
 
 #+1 for explaining in a single coherent sentence what we can learn from these data
 #The main idea of this is to capture the most common monetary ammount crontributed to the 2011-2012 federal election cycle by political entities.
