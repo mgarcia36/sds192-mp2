@@ -98,9 +98,43 @@ tallying_alaska <- contributions_by_alaska %>%
 
 top_ten_cmte_alaska <- subset(contributions_by_alaska, cmte_name %in% tallying_alaska$cmte_name[0:10])
 
-ggplot(top_10, aes(cmte_name, transaction_amt)) +
-  geom_bar(stat = "identity") +
-  coord_flip()
+ggplot(top_ten_cmte_alaska, aes(cmte_name, transaction_amt)) +
+  ggtitle("Top Ten Committees Donated to by Individuals in 2011") +
+  geom_bar(stat = "identity", fill = "olivedrab") +
+  theme_hc() +
+  theme(axis.text.x = element_text(color = "black", 
+                           size = 10, family = "Trebuchet MS", angle = 90),
+        axis.text.y = element_text(color = "black", 
+                           size = 10, family = "Trebuchet MS"),
+        axis.ticks.x = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank()
+        ) + 
+  # Committees x- axis
+  scale_x_discrete(name = "Donation Amount",
+                     expand = c(0,0),
+                     labels = c("ACTBLUE" = "ACTBLUE",
+                                "ALASKA DEMOCRATIC PARTY" = "AK DEM. PARTY",
+                                "ALASKANS FOR BEGICH 2014" = "AK FOR BEGICH '14",
+                                "ALASKANS FOR DON YOUNG INC." = "AK FOR DON YOUNG INC.",
+                                "DNC SERVICES CORPORATION/DEMOCRATIC NATIONAL COMMITTEE" = "DNC",
+                                "NATIONAL ASSOCIATION OF REALTORS POLITICAL ACTION COMMITTEE" = "NAT. ASSOC. OF REALTORS",
+                                "OBAMA FOR AMERICA" = "OBAMA FOR AMERICA",
+                                "REPUBLICAN NATIONAL COMMITTEE" = "RNC",
+                                "ROMNEY FOR PRESIDENT INC." = "ROMNEY FOR PRESIDENT",
+                                "RON PAUL 2012 PRESIDENTIAL CAMPAIGN COMMITTEE INC." = "RON PAUL '12 PRES. CAMPAIGN"
+                                 )) +
+  # Donation Amount y-axis
+  scale_y_continuous(name = "Total Amt. of Donations",
+                   labels = c("0" = "$0",
+                              "25000" = "$25k",
+                              "50000" = "$50k",
+                              "75000" = "$75k",
+                              "100000" = "$100k")) 
+
+
+
 ```
 
 
@@ -184,37 +218,4 @@ Independent expenditure opposing election of candidate
 24Z
 In-kind contribution made to registered filer
 ## ----------------------------------------------------
-
-```{r}
-
-ggplot(cont, aes(x = transaction_amt)) + 
-  ggtitle("Amount of contributors per donation amount") +
-
-  geom_histogram(bins = 11, color = "black", fill = "olivedrab") +
-  theme_hc() +
-  theme(axis.text.x = element_text(color = "black", 
-                           size = 12, family = "Trebuchet MS"),
-        axis.text.y = element_text(color = "black", 
-                           size = 12, family = "Trebuchet MS"),
-        axis.ticks.x = element_blank(),
-        axis.ticks.y = element_blank(),
-        panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank()
-        ) + 
-  # Transaction Amount x- axis
-  scale_x_continuous(name = "Donation Amount",
-                     expand = c(0,0),
-                     limits = c(0, 6000),
-                     labels = c("0" = "",
-                                "1000" = "$1000",
-                                "2000" = "$2000",
-                                "3000" = "$3000",
-                                "4000" = "$4000",
-                                "5000" = "$5000",
-                                "6000" = ""
-                                 )) +
-  # Count y-axis
-  scale_y_continuous(name = "Number of Contributors") 
-                  
-```
 
