@@ -22,11 +22,42 @@ require(lubridate)
 load("committees.rda")
 load("individuals.rda")
 
-
-
 ```
 
+```{r, message=FALSE, warning=FALSE}
+#The following function will make the new data frame "contributions_by_state"
+#The function will allow user to input state abbreviation, or "state_arg" to get top 10 committees that individuals within state have donated to
+#mutate()
+#filter()
+#inner_join()
+#select()
+#group_by()
+#summarise()
+#arrange()
 
+require(lubridate)
+contributions_by_state <- function(state_arg){
+  individuals %>%
+  mutate(transaction_date = mdy(transaction_dt)) %>%
+  filter(state == state_arg, 
+         entity_type == "IND",
+         transaction_date >= "2011-01-01",
+         transaction_date <= "2011-12-31",
+         transaction_amt >= 0 & transaction_amt <= 5000) %>%
+  inner_join(committees, by = "cmte_id") %>%
+  select(transaction_type, 
+         entity_type, 
+         state, 
+         transaction_date, 
+         transaction_amt,
+         cmte_name)%>%
+    group_by(cmte_name) %>%
+    summarise(com_groups = sum(transaction_amt)) %>%
+    arrange(desc(com_groups)) 
+    
+}
+
+```
 
 ```{r, message=FALSE, warning=FALSE}
 
@@ -35,9 +66,6 @@ load("individuals.rda")
 #filter() filters rows that have the desired state, entity_type, transaction_date and transaction_amt
 #inner_join to join individuals and committees data frames by column "cmte_id"
 #select() selects specific columns from data frame that we're interested in
-
-
-
 contributions_by_all <- individuals %>%
   mutate(transaction_date = mdy(transaction_dt)) %>%
   filter(state == "NY", 
@@ -52,15 +80,11 @@ contributions_by_all <- individuals %>%
          transaction_date, 
          transaction_amt,
          cmte_name,
-         cmte_id) 
+         cmte_id)%>%
+  group_by(cmte_name) %>%
+  summarise(com_groups = sum(transaction_amt)) %>%
+  arrange(desc(com_groups)) 
   
-```
-
-
-
-```{r, message=FALSE, warning=FALSE}
-ggplot(contributions_by_all, aes(cmte_name, transaction_amt)) +
-  geom_bar(stat = "identity") 
 ```
 
 #-------------------------------------------
@@ -72,7 +96,7 @@ ggplot(contributions_by_all, aes(cmte_name, transaction_amt)) +
 # inner_join to join individuals and committees data frames by column "cmte_id"
 # select() selects specific columns from data frame that we're interested in
 
-
+require(lubridate)
 contributions_by_alaska <- individuals %>%
   mutate(transaction_date = mdy(transaction_dt)) %>%
   filter(state == "AK", 
@@ -159,7 +183,122 @@ So, even though Alaska is a republican state, there is a divide in idealogies th
 
 
 
+#-------------------------------------------
+### Swing State in 2011: Florida (Marta)
+```{r, message=FALSE, warning=FALSE}
+contributions_by_florida <- contributions_by_state(state_arg = "FL")
 
+```
+
+
+#-------------------------------------------
+<<<<<<< HEAD
+=======
+### Blue State in 2011: California (Karen)
+```{r, message=FALSE, warning=FALSE}
+# The following will make up the new data frame "contributions_by_alaska"
+# mutate() mutates variable "transaction_dt" from individuals data frame to new variable transaction date, so it is a 'date' type
+# filter() filters rows that have the desired state, entity_type, transaction_date and transaction_amt
+# inner_join to join individuals and committees data frames by column "cmte_id"
+# select() selects specific columns from data frame that we're interested in
+
+
+contributions_by_cali <- individuals %>%
+  mutate(transaction_date = mdy(transaction_dt)) %>%
+  filter(state == "CA", 
+         entity_type == "IND",
+         transaction_date >= "2011-01-01",
+         transaction_date <= "2011-12-31",
+         transaction_amt >= 0 & transaction_amt <= 5000) %>%
+  inner_join(committees, by = "cmte_id") %>%
+  select(transaction_type, 
+         entity_type, 
+         state, 
+         transaction_date, 
+         transaction_amt,
+         cmte_name,
+         cmte_id)
+
+tallying_cali <- contributions_by_cali %>%
+  group_by(cmte_name) %>%
+  tally(sort = TRUE)
+
+contributions_by_cali
+tallying_cali
+```
+
+
+
+```{r, fig.width = 15, fig.height = 10}
+
+# Using ggplot to generate bar plot of the "Top Ten Committees Donated to by Individuals in 2011 (California)"
+
+top_ten_cmte_cali <- subset(contributions_by_cali, cmte_name %in% tallying_cali$cmte_name[0:10])
+
+ggplot(top_ten_cmte_cali, aes(cmte_name, transaction_amt)) +
+  ggtitle("Committees that Received Contributions Made By Individuals in 2011") +
+  geom_bar(stat = "identity", fill = "blue") +
+  theme_hc() +
+  theme(axis.text.x = element_text(color = "black", 
+                           size = 14, family = "Trebuchet MS", angle = 90, face = "bold"),
+        axis.text.y = element_text(color = "black", 
+                           size = 14, family = "Trebuchet MS", face = "bold"),
+        axis.ticks.x = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        plot.title = element_text(lineheight = 1, face="bold")) + 
+  # Committees x- axis
+  scale_x_discrete(name = "Recipients of Contributions",
+                     expand = c(0,0),
+                     labels = c("ACTBLUE" = "ACTBLUE",
+                                "DNC SERVICES CORPORATION/DEMOCRATIC NATIONAL COMMITTEE" = "DNC",
+                                "DEMOCRATIC SENATORIAL CAMPAIGN COMMITTEE" = "DEMOCRATIC SENATORIAL CAMPAIGN COMMITTEE",
+                                "DEMOCRATIC CONGRESSIONAL CAMPAIGN COMMITTEE" = "DEMOCRATIC CONGRESSIONAL CAMPAIGN COMMITTEE",
+                                "EMILY'S LIST" = "EMILY'S LIST",
+                                "OBAMA FOR AMERICA" = "OBAMA FOR AMERICA",
+                                "OBAMA VICTORY FUND 2012" = "OBAMA VICTORY FUND 2012",
+                                "REPUBLICAN NATIONAL COMMITTEE" = "RNC",
+                                "ROMNEY FOR PRESIDENT INC." = "ROMNEY FOR PRESIDENT",
+                                "RON PAUL 2012 PRESIDENTIAL CAMPAIGN COMMITTEE INC." = "RON PAUL '12 PRES. CAMPAIGN"
+                                 )) +
+  # Contribution Amount y-axis
+  scale_y_continuous(name = "Total Amt. of Contributions",
+                     labels = c("0" = "$0",
+                              "25000" = "$25k",
+                              "50000" = "$50k",
+                              "75000" = "$75k",
+                              "100000" = "$100k")) + coord_flip()
+
+                                      
+
+
+
+```
+
+
+### +1 blog post text provides context or background useful in interpreting the graphic
+
+The second data visualization presented is a bar plot regarding the contributions made in the state of California in the year 2011.The difference here, is that California is historically known for being a blue state during election cycles in comparison to Alaska. 
+ 
+The committees included are: Actblue, Democratic Congressional Campaign Committee, Democratic Senatorial Campaign Committee, Democratic Congressional Campaign Committee, DNC (DNC Services Corporation/Democratic National Committee), Emily's List, Obama Victory Fund 2012, Obama for America, RNC (Republican National Committee), Romney for President Inc., Ron Paul '12 Pres. Campaign.
+
+Here, we see a strong alingment to democratic ideology as 7 of the top ten committees that received contributions from individuals are Democrat. However, it is important to note that although a liberal idealogy is most common, there is still a  Republican presence shown through the Romney for President campaign, which received an almost equal amount of contributions as the Obama for America committee. There is also a Libretarian presence represented through the Ron Paul '12 Pres. Campaign. So, we can say there are a variety of political ideologies represented. Another important thing to note is that there are more contributions being made to presidential campaigns than those for the RNC, DNC, Democratic Senatorial Campaign Committee, etc. In this case, it is most important to individuals in Califonia to make monetary contributions to the face of America, the president, than it is to make contributions to other political branches such as the senate, congress, etc. This is interesting because typically, these branches of the government have the most say in regards to legislation and health care, the federal budget, etc. One last interesting point to make is the ammount of support directly made to the Obama campaign in this state, which demonstates the preferred presidential candidate. Howver, one unique entity is Emily's List, which works towards igniting change by getting pro-choice Democratic women elected to office. The ammount of contributions made to this commitee also signifies a strong pro-women, pro-choice ideology present in the state.
+
+
+### +1 for explaining in a single coherent sentence what we can learn from these data
+The main idea of this bar chart, is to capture the top ten committees and the amount received (by each) from donations made by individuals in 3 specific states during the 2011 federal election cycle. 
+
+
+#-------------------------------------------
+
+
+
+
+
+
+
+>>>>>>> 8e1bd2afde7f78d7e75c49ad969aae89ab5fa7ba
 ```{r}
 #FUNCTION USED + UPDATES------------------------------------------------
 contributions_new <- function(data, state_arg, entity_type_arg){
