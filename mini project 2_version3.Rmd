@@ -31,6 +31,8 @@ load("individuals.rda")
 #inner_join()
 #select()
 #group_by()
+#summarise()
+#arrange()
 
 require(lubridate)
 contributions_by_state <- function(state_arg){
@@ -63,10 +65,6 @@ contributions_by_state <- function(state_arg){
 #filter() filters rows that have the desired state, entity_type, transaction_date and transaction_amt
 #inner_join to join individuals and committees data frames by column "cmte_id"
 #select() selects specific columns from data frame that we're interested in
-
-
-
-
 contributions_by_all <- individuals %>%
   mutate(transaction_date = mdy(transaction_dt)) %>%
   filter(state == "NY", 
@@ -86,13 +84,6 @@ contributions_by_all <- individuals %>%
   summarise(com_groups = sum(transaction_amt)) %>%
   arrange(desc(com_groups)) 
   
-```
-
-
-
-```{r, message=FALSE, warning=FALSE}
-ggplot(contributions_by_all, aes(cmte_name, transaction_amt)) +
-  geom_bar(stat = "identity") 
 ```
 
 #-------------------------------------------
@@ -195,67 +186,7 @@ So, even though Alaska is a republican state, there is a divide in idealogies th
 #-------------------------------------------
 ### Swing State in 2011: Florida (Marta)
 ```{r, message=FALSE, warning=FALSE}
-# The following will make up the new data frame "contributions_by_alaska"
-# mutate() mutates variable "transaction_dt" from individuals data frame to new variable transaction date, so it is a 'date' type
-# filter() filters rows that have the desired state, entity_type, transaction_date and transaction_amt
-# inner_join to join individuals and committees data frames by column "cmte_id"
-# select() selects specific columns from data frame that we're interested in
-
-require(lubridate)
-contributions_by_state <- function(state_arg){
-  individuals %>%
-  mutate(transaction_date = mdy(transaction_dt)) %>%
-  filter(state == state_arg, 
-         entity_type == "IND",
-         transaction_date >= "2011-01-01",
-         transaction_date <= "2011-12-31",
-         transaction_amt >= 0 & transaction_amt <= 5000) %>%
-  inner_join(committees, by = "cmte_id") %>%
-  select(transaction_type, 
-         entity_type, 
-         state, 
-         transaction_date, 
-         transaction_amt,
-         cmte_name)%>%
-    group_by(cmte_name) %>%
-    summarise(com_groups = sum(transaction_amt)) %>%
-    arrange(desc(com_groups)) %>%
-    slice(1:10)
-    
-}
-
-contributns_by_alaska <- contributions_by_state(state_arg = "AK")
-
 contributions_by_florida <- contributions_by_state(state_arg = "FL")
-
-contributns_by_alaska <- contributions_by_state(state_arg = "AK")
-ggplot(contributns_by_alaska, aes(cmte_name, transaction_amt)) +
-  ggtitle("Committees that Received Contributions Made By Individuals in 2011") +
-  geom_bar(stat = "identity", fill = "olivedrab")
-
-top_ten_cmte_alaska <- subset(contributions_by_alaska, cmte_name %in% tallying_alaska$cmte_name[0:10])
-  
-
-
-contributions_by_florida <- individuals %>%
-  mutate(transaction_date = mdy(transaction_dt)) %>%
-  filter(state == "FL", 
-         entity_type == "IND",
-         transaction_date >= "2011-01-01",
-         transaction_date <= "2011-12-31",
-         transaction_amt >= 0 & transaction_amt <= 5000) %>%
-  inner_join(committees, by = "cmte_id") %>%
-  select(transaction_type, 
-         entity_type, 
-         state, 
-         transaction_date, 
-         transaction_amt,
-         cmte_name,
-         cmte_id)
-
-tallying_florida <- contributions_by_florida %>%
-  group_by(cmte_name) %>%
-  tally(sort = TRUE)
 
 ```
 
