@@ -63,7 +63,8 @@ contributions_by_state <- function(state_arg){
          cmte_name)%>%
     group_by(cmte_name) %>%
     summarise(com_groups = sum(transaction_amt)) %>%
-    arrange(desc(com_groups)) 
+    arrange(desc(com_groups)) %>%
+    slice(1:10)
     
 }
 
