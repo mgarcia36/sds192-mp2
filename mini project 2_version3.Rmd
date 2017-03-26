@@ -228,7 +228,7 @@ florida_plot <- ggplot(contributions_by_florida, aes(cmte_name, com_groups)) +
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(),
         plot.title = element_text(lineheight = 1, face="bold"),
-        plot.margin = unit(c(1,.5,0,1), "cm")) +
+        plot.margin = unit(c(1,.5,1,1), "cm")) +
   # Committees x- axis
   scale_x_discrete(name = "Recipients of Contributions",
                      expand = c(0,0),
@@ -248,6 +248,7 @@ florida_plot <- ggplot(contributions_by_florida, aes(cmte_name, com_groups)) +
                                   "ADAM HASNER \nFOR HOUSE"
                                  )) +
   scale_y_continuous(name = "Total amt of contributions",
+                     expand = c(0,0),
                      labels = c("0" = "$0M",
                                 "1000000" = "$1M",
                                 "2000000" = "$2M",
