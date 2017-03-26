@@ -45,7 +45,7 @@ load("individuals.rda")
 # group_by(): groups the dataframe by committee name, in order to
 # summarise(): summarise and sum all the transaction amounts of each committee and finally
 # arrange(): arrange these committees in descending order to have the most contributed committees at the top
-# slice(): selects top 10 committees at the top
+# slice(): selects top 10 committees at the top of the tbl
 
 
 contributions_by_state <- function(state_arg){
@@ -206,17 +206,23 @@ So, even though Alaska is a republican state, there is a divide in idealogies th
 
 #-------------------------------------------
 ### Swing State in 2011: Florida (Marta)
-```{r, message=FALSE, warning=FALSE}
+During the 2011 federal election cycle, these were the top ten committees and the amount of money received, by each respectively, from contributions made by individuals in the state of Florida.
+```{r}
 contributions_by_florida <- contributions_by_state(state_arg = "FL")
+```
+
+
+```{r, fig.width = 8, fig.height = 3}
 
 florida_plot <- ggplot(contributions_by_florida, aes(cmte_name, com_groups)) +
   ggtitle("Committees that Received Contributions in 2011") +
   geom_bar(stat = "identity", fill = "olivedrab") +
   theme_hc() +
   theme(axis.text.x = element_text(color = "black", 
-                           size = 9, family = "Trebuchet MS", angle = 90, hjust = 1, face = "bold"),
+                           size = 10, family = "Trebuchet MS", face = "bold"),
         axis.text.y = element_text(color = "black", 
                            size = 10, family = "Trebuchet MS", face = "bold"),
+        axis.title = element_text(family = "Trebuchet MS", face = "bold"),
         axis.ticks.x = element_blank(),
         axis.ticks.y = element_blank(),
         panel.grid.major = element_blank(), 
@@ -226,30 +232,29 @@ florida_plot <- ggplot(contributions_by_florida, aes(cmte_name, com_groups)) +
   # Committees x- axis
   scale_x_discrete(name = "Recipients of Contributions",
                      expand = c(0,0),
-                     labels = c("ROMNEY FOR PRESIDENT INC." = "ROMNEY FOR PRES",
+                     labels = c("ROMNEY FOR PRESIDENT INC." = "ROMNEY \nFOR PRES",
                                 "FRIENDS OF MIKE H" = "MIKE H",
                                 "BILL NELSON FOR U S SENATE" = 
-                                  "BILL NELSON FOR SENATE",
+                                  "BILL NELSON \nFOR SENATE",
                                 "OBAMA FOR AMERICA" = "OBAMA FOR AMERICA",
                                 "FRIENDS OF GEORGE LEMIEUX" = "GEORGE LEMEIEUX",
                                 "OBAMA VICTORY FUND 2012" = 
-                                  "OBAMA VICTORY FUND 2012",
+                                  "OBAMA VICTORY \nFUND 2012",
                                 "REPUBLICAN NATIONAL COMMITTEE" = "RNC",
                                 "LOIS FRANKEL FOR CONGRESS" = 
-                                  "LOIS FRANKEL FOR CONGRESS",
+                                  "LOIS FRANKEL \nFOR CONGRESS",
                                 "FRIENDS OF PATRICK MURPHY" = "PATRICK MURPHY",
-                                "ADAM HASNER FOR FOR US HOUSE" = 
-                                  "ADAM HASNER FOR HOUSE"
+                                "ADAM HASNER FOR US HOUSE" = 
+                                  "ADAM HASNER \nFOR HOUSE"
                                  )) +
   scale_y_continuous(name = "Total amt of contributions",
-                     labels = c("0" = "$0",
-                                "1000000" = "$1mill",
-                                "2000000" = "$2mill",
-                                "3000000" = "$3mill",
-                                "4000000" = "$4mill",
-                                "5000000" = "$5mill"
+                     labels = c("0" = "$0M",
+                                "1000000" = "$1M",
+                                "2000000" = "$2M",
+                                "3000000" = "$3M",
+                                "4000000" = "$4M",
+                                "5000000" = "$5M"
                                 )) 
-  
 
 florida_plot
 
