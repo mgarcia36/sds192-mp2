@@ -32,7 +32,7 @@ load("individuals.rda")
 
 ### Why the year 2011? We were interested to see what committees individuals were placing their money pre-election year. Would it be to for Obama's Re-election Campaign? Would it be for Romney's Presidential Election Campaign? Or Ron Paul's Presidential Election? 
 
-### Restrictions: The (individual's) occupations included in this dataset range from homemaker to veternarian to teacher, and almost everything in between. These contributions ranged from $0 to $750,000, but we decided to restrict this range from $0 to $5000. This range is subjective to what we think is a "realistic"" measure to what people can "afford" to contribute to political committees and see how much these smaller contributions add up to in the end. 
+### Restrictions: The (individual's) occupations included in this dataset range from homemaker to veternarian to teacher, and almost everything in between. These contributions ranged from $0 to $750,000, but we decided to restrict this range from $0 to $5000. This range is subjective to what we think is a "realistic" measure to what people can "afford" to contribute to political committees and see how much these smaller contributions add up to in the end. 
 
 
 ```{r, message=FALSE, warning=FALSE}
@@ -46,7 +46,6 @@ load("individuals.rda")
 # summarise(): summarise and sum all the transaction amounts of each committee and finally
 # arrange(): arrange these committees in descending order to have the most contributed committees at the top
 # slice(): selects top 10 committees at the top of the tbl
-
 
 contributions_by_state <- function(state_arg){
   individuals %>%
@@ -203,68 +202,6 @@ So, even though Alaska is a republican state, there is a divide in idealogies th
 #-------------------------------------------
 
 
-
-#-------------------------------------------
-### Swing State in 2011: Florida (Marta)
-During the 2011 federal election cycle, these were the top ten committees and the amount of money received, by each respectively, from contributions made by individuals in the state of Florida.
-```{r}
-contributions_by_florida <- contributions_by_state(state_arg = "FL")
-```
-
-
-```{r, fig.width = 8, fig.height = 3}
-
-florida_plot <- ggplot(contributions_by_florida, aes(cmte_name, com_groups)) +
-  ggtitle("Committees that Received Contributions in 2011") +
-  geom_bar(stat = "identity", fill = "olivedrab") +
-  theme_hc() +
-  theme(axis.text.x = element_text(color = "black", 
-                           size = 10, family = "Trebuchet MS", face = "bold"),
-        axis.text.y = element_text(color = "black", 
-                           size = 10, family = "Trebuchet MS", face = "bold"),
-        axis.title = element_text(family = "Trebuchet MS", face = "bold"),
-        axis.ticks.x = element_blank(),
-        axis.ticks.y = element_blank(),
-        panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(),
-        plot.title = element_text(lineheight = 1, face="bold"),
-        plot.margin = unit(c(1,.5,1,1), "cm")) +
-  # Committees x- axis
-  scale_x_discrete(name = "Recipients of Contributions",
-                     expand = c(0,0),
-                     labels = c("ROMNEY FOR PRESIDENT INC." = "ROMNEY \nFOR PRES",
-                                "FRIENDS OF MIKE H" = "MIKE H",
-                                "BILL NELSON FOR U S SENATE" = 
-                                  "BILL NELSON \nFOR SENATE",
-                                "OBAMA FOR AMERICA" = "OBAMA FOR AMERICA",
-                                "FRIENDS OF GEORGE LEMIEUX" = "GEORGE LEMEIEUX",
-                                "OBAMA VICTORY FUND 2012" = 
-                                  "OBAMA VICTORY \nFUND 2012",
-                                "REPUBLICAN NATIONAL COMMITTEE" = "RNC",
-                                "LOIS FRANKEL FOR CONGRESS" = 
-                                  "LOIS FRANKEL \nFOR CONGRESS",
-                                "FRIENDS OF PATRICK MURPHY" = "PATRICK MURPHY",
-                                "ADAM HASNER FOR US HOUSE" = 
-                                  "ADAM HASNER \nFOR HOUSE"
-                                 )) +
-  scale_y_continuous(name = "Total amt of contributions",
-                     expand = c(0,0),
-                     labels = c("0" = "$0M",
-                                "1000000" = "$1M",
-                                "2000000" = "$2M",
-                                "3000000" = "$3M",
-                                "4000000" = "$4M",
-                                "5000000" = "$5M"
-                                )) 
-
-florida_plot
-
-```
-
-
-```
-
-
 #-------------------------------------------
 <<<<<<< HEAD
 =======
@@ -300,7 +237,6 @@ tallying_cali <- contributions_by_cali %>%
 contributions_by_cali
 tallying_cali
 ```
-
 
 
 ```{r, fig.width = 15, fig.height = 10}
@@ -366,6 +302,137 @@ The main idea of this bar chart, is to capture the top ten committees and the am
 
 
 #-------------------------------------------
+
+
+#-------------------------------------------
+### Swing State in 2011: Florida (Marta)
+The third state we will examine is Florida, or a notoriously known swing state. 
+During the 2011 federal election cycle, these were the top ten committees and the amount of money received, by each respectively, from contributions made by individuals in the state of Florida.
+```{r}
+contributions_by_florida <- contributions_by_state(state_arg = "FL")
+```
+
+
+```{r, fig.width = 8, fig.height = 3}
+# Using ggplot to generate bar plot of "Committees that Received Contributions Made by Individuals in 2011 (Florida)"
+
+florida_plot <- ggplot(contributions_by_florida, aes(cmte_name, com_groups)) +
+  ggtitle("Committees that Received Contributions Made by Individuals in 2011 (Florida)") +
+  geom_bar(stat = "identity", fill = "olivedrab") +
+  theme_hc() +
+  theme(axis.text.x = element_text(color = "black", 
+                           size = 11, family = "Trebuchet MS", face = "bold"),
+        axis.text.y = element_text(color = "black", 
+                           size = 11, family = "Trebuchet MS", face = "bold"),
+        axis.title = element_text(family = "Trebuchet MS", face = "bold"),
+        axis.ticks.x = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        plot.title = element_text(lineheight = 1, face="bold", family = "Trebuchet MS"),
+        plot.margin = unit(c(1,.5,1,1), "cm")) +
+  # Committees x- axis
+  scale_x_discrete(name = "Recipients of Contributions",
+                     expand = c(0,0),
+                     labels = c("ROMNEY FOR PRESIDENT INC." = "ROMNEY \nFOR PRESIDENT",
+                                "FRIENDS OF MIKE H" = "FRIENDS OF \nMIKE H",
+                                "BILL NELSON FOR U S SENATE" = 
+                                  "BILL NELSON \nFOR SENATE",
+                                "OBAMA FOR AMERICA" = "OBAMA FOR AMERICA",
+                                "FRIENDS OF GEORGE LEMIEUX" = "FRIENDS OF \nGEORGE LEMEIEUX",
+                                "OBAMA VICTORY FUND 2012" = 
+                                  "OBAMA VICTORY \nFUND 2012",
+                                "REPUBLICAN NATIONAL COMMITTEE" = "RNC",
+                                "LOIS FRANKEL FOR CONGRESS" = 
+                                  "LOIS FRANKEL \nFOR CONGRESS",
+                                "FRIENDS OF PATRICK MURPHY" = "FRIENDS OF \nPATRICK MURPHY",
+                                "ADAM HASNER FOR US HOUSE" = 
+                                  "ADAM HASNER \nFOR HOUSE"
+                                 )) +
+  scale_y_continuous(name = "Total amt of contributions",
+                     expand = c(0,0),
+                     labels = c("0" = "$0M",
+                                "1000000" = "$1M",
+                                "2000000" = "$2M",
+                                "3000000" = "$3M",
+                                "4000000" = "$4M",
+                                "5000000" = "$5M"
+                                )) 
+
+florida_plot
+
+```
++1 blog post text provides context or useful information in interpreting the graphic
+
+The third data visualization presented is a bar plot regarding the contributions made in the state of Florida in the year 2011. The difference here is that Florida has been known for being a swing state during election cycles in comparison to both California and Alaska. Candidates representing both main parties tend to spend most their time campaigning in swing states because they know they cannot guarantee votes from these states the same way Democrats can guarantee their votes in California and Republicans can guarantee their votes in Alaska.  
+ 
+The committees included are: Adam Hasner for US House, Bill Nelson for US Senate, Friends of George Lemieux, Friends of Mike H, Friends of Patrick Murphy, Lois Frankel for Congress, Obama for America, Obama Victory Fund 2012, RNC (Republican National Committee), Romney for President Inc.
+
+Here, we see neither a strong alignment to the Republican party, nor one to the Democratic party. Upon futher research, we find out Adam Hasner, George Lemeieux, Mike Haridopolos, the RNC (Republican National Committee) and Romney for President are all committees supporting Republican candidates, with the remaining 5 supporting Democratic candidates. Although Obama for America does sit within the top 4 committees contributed to, the amounts of money contributed to Romney, Mike Haridopolos, and Bill Nelson are so vast that the $1,948,666 donated to Obama for America looks small and insignificant. However, if we were to sum the Obama for America and Obama Victory Fund 2012 contributions, the sum would be slightly greater than Bill Nelson's amount, who was also a Democratic candidate. Despite all the contributions made to Romney's campaign, Obama ending up winning Florida's electoral votes in the 2012 election. Another important fact to note is that Bill Nelson was running for his third term in the Senate, so he was an incumbent.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
