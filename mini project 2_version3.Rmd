@@ -40,11 +40,12 @@ load("individuals.rda")
 # The function will allow the user to input a state abbreviation (including DC) or "state_arg" to get the top 10 committees that individuals within state have donated to
 # mutate(): mutates variable "transaction_dt" from individuals data frame to new variable transaction date, so it is a 'date' type
 # filter(): filters rows that have the desired state, entity_type, transaction_date and transaction_amt
-# inner_join to join individuals and committees data frames by column "cmte_id"
+# inner_join: to join individuals and committees data frames by column "cmte_id"
 # select() selects specific columns from data frame that we're interested in
 # group_by(): groups the dataframe by committee name, in order to
 # summarise(): summarise and sum all the transaction amounts of each committee and finally
 # arrange(): arrange these committees in descending order to have the most contributed committees at the top
+# slice(): selects top 10 committees at the top
 
 
 contributions_by_state <- function(state_arg){
@@ -208,7 +209,7 @@ So, even though Alaska is a republican state, there is a divide in idealogies th
 ```{r, message=FALSE, warning=FALSE}
 contributions_by_florida <- contributions_by_state(state_arg = "FL")
 
-ggplot(contributions_by_florida, aes(cmte_name, com_groups)) +
+florida_plot <- ggplot(contributions_by_florida, aes(cmte_name, com_groups)) +
   ggtitle("Committees that Received Contributions Made By Individuals in 2011") +
   geom_bar(stat = "identity", fill = "seagreen3") +
   theme_hc() +
@@ -220,7 +221,8 @@ ggplot(contributions_by_florida, aes(cmte_name, com_groups)) +
         axis.ticks.y = element_blank(),
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(),
-        plot.title = element_text(lineheight = 1, face="bold")) + 
+        plot.title = element_text(lineheight = 1, face="bold"),
+        legend.margin =  ) + 
   # Committees x- axis
   scale_x_discrete(name = "Recipients of Contributions",
                      expand = c(0,0),
@@ -239,13 +241,17 @@ ggplot(contributions_by_florida, aes(cmte_name, com_groups)) +
                                 "ADAM HASNER FOR FOR US HOUSE" = 
                                   "ADAM HASNER FOR HOUSE"
                                  )) +
-  # Formatting the y-axis
-  scale_y_continuous(name = "Total Amt. of Contributions",
+  scale_y_continuous(name = "Total amount of contributions in millions",
                      labels = c("0" = "$0",
                                 "1000000" = "$1mill",
                                 "2000000" = "$2mill",
                                 "3000000" = "$3mill",
-                                "4000000" = "4mill"))
+                                "4000000" = "$4mill",
+                                "5000000" = "$5mill"
+                                )) +
+  
+
+florida_plot
 
 ```
 
