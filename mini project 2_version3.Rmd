@@ -4,9 +4,13 @@ author: "Diana Fierros-Pina, Karen Diaz, Marta Garcia"
 date: "March 20, 2017"
 output: html_document
 ---
+
+# Possible title? "Where did the people's political contributions go to in 2011?"
 ## Need contributions and say positive
 
+
 ```{r, message=FALSE}
+# Packages need
 require(tidyverse)
 require(ggthemes)
 require(plyr)
@@ -15,14 +19,21 @@ require(lubridate)
 
 
 ```{r, include=FALSE}
-#load("house_elections.rda")
-#load("candidates.rda")
-#load("contributions.rda")
-
+# Datasets being used
 load("committees.rda")
 load("individuals.rda")
 
 ```
+
+
+### Have you ever wondered where regular folks like you and I have politically contributed to in the year 2011? Well, look no further, you are about to see three different states - red, blue and swing - in which committees were most popular to contribute by individuals. 
+
+### Background: The "committees" and "individuals" datasets helped us answer this question with some filtering, we were able to cut these immense and overwhelming datasets into a "smaller" dataset with observations that we were meant to answer the question in question. 
+
+### Why the year 2011? We were interested to see what committees individuals were placing their money pre-election year. Would it be to for Obama's Re-election Campaign? Would it be for Romney's Presidential Election Campaign? Or Ron Paul's Presidential Election? 
+
+### Restrictions: The (individual's) occupations included in this dataset range from homemaker to veternarian to teacher, and almost everything in between. These contributions ranged from $0 to $750,000, but we decided to restrict this range from $0 to $5000. This range is subjective to what we think is a "realistic"" measure to what people can "afford" to contribute to political committees and see how much these smaller contributions add up to in the end. 
+
 
 ```{r, message=FALSE, warning=FALSE}
 #The following function will make the new data frame "contributions_by_state"
@@ -35,7 +46,6 @@ load("individuals.rda")
 #summarise()
 #arrange()
 
-require(lubridate)
 contributions_by_state <- function(state_arg){
   individuals %>%
   mutate(transaction_date = mdy(transaction_dt)) %>%
@@ -66,6 +76,7 @@ contributions_by_state <- function(state_arg){
 #filter() filters rows that have the desired state, entity_type, transaction_date and transaction_amt
 #inner_join to join individuals and committees data frames by column "cmte_id"
 #select() selects specific columns from data frame that we're interested in
+
 contributions_by_all <- individuals %>%
   mutate(transaction_date = mdy(transaction_dt)) %>%
   filter(state == "NY", 
@@ -90,13 +101,11 @@ contributions_by_all <- individuals %>%
 #-------------------------------------------
 ### Red State in 2011: Alaska (Diana)
 ```{r, message=FALSE, warning=FALSE}
-# The following will make up the new data frame "contributions_by_alaska"
-# mutate() mutates variable "transaction_dt" from individuals data frame to new variable transaction date, so it is a 'date' type
-# filter() filters rows that have the desired state, entity_type, transaction_date and transaction_amt
-# inner_join to join individuals and committees data frames by column "cmte_id"
-# select() selects specific columns from data frame that we're interested in
+# The following will make up the new data frame "contributions_by_alaska" that came about by using the function "contribution_by_state"
 
-require(lubridate)
+contributions_by_alaska <- contributions_by_state(state_arg = "AK")
+
+
 contributions_by_alaska <- individuals %>%
   mutate(transaction_date = mdy(transaction_dt)) %>%
   filter(state == "AK", 
@@ -295,41 +304,8 @@ The main idea of this bar chart, is to capture the top ten committees and the am
 
 
 
+#---------------------------------
 
-
-
->>>>>>> 8e1bd2afde7f78d7e75c49ad969aae89ab5fa7ba
-```{r}
-#FUNCTION USED + UPDATES------------------------------------------------
-contributions_new <- function(data, state_arg, entity_type_arg){
-  new_data <- data %>%
-    mutate(transaction_date = mdy(transaction_dt)) %>%
-    filter(state == state_arg,
-           entity_type == entity_type_arg,
-           transaction_date >= "2011-01-01" & transaction_date <= "2011-12-31",
-           transaction_amt >= 0 & transaction_amt <= 5000) %>%
-    select(transaction_date,
-           state,
-           entity_type,
-           transaction_type,
-           transaction_amt)
-    return(new_data)
-  }
-
-#contributions_new(data = contributions, state_arg = "CA", entity_type_arg = "PAC")
-entity_data <- contributions_new(data = contributions, state_arg = "CA", entity_type_arg = "PAC")
-glimpse(entity_data)
-
-#finds fthe frequency of each transaction type
-most_common <- as.data.frame(table(unlist(entity_data$transaction_type)))
-class(most_common)
-#order(most_common$Freq)
-
-#dorts in descending order
-most_common[order(most_common$Freq, decreasing = TRUE), ]
-#glimpse(most_common)
-#-----------------------------------------------------------------------
-```
 
 
 #+1 for explaining in a single coherent sentence what we can learn from these data
