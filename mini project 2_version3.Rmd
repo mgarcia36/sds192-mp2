@@ -10,7 +10,7 @@ output: html_document
 
 
 ```{r, message=FALSE}
-# Packages need
+# Packages needed
 require(tidyverse)
 require(ggthemes)
 require(plyr)
@@ -36,15 +36,16 @@ load("individuals.rda")
 
 
 ```{r, message=FALSE, warning=FALSE}
-#The following function will make the new data frame "contributions_by_state"
-#The function will allow user to input state abbreviation, or "state_arg" to get top 10 committees that individuals within state have donated to
-#mutate()
-#filter()
-#inner_join()
-#select()
-#group_by()
-#summarise()
-#arrange()
+# The following function will make a new data frame called "contributions_by_state"
+# The function will allow the user to input a state abbreviation (including DC) or "state_arg" to get the top 10 committees that individuals within state have donated to
+# mutate(): mutates variable "transaction_dt" from individuals data frame to new variable transaction date, so it is a 'date' type
+# filter(): filters rows that have the desired state, entity_type, transaction_date and transaction_amt
+# inner_join to join individuals and committees data frames by column "cmte_id"
+# select() selects specific columns from data frame that we're interested in
+# group_by(): groups the dataframe by committee name, in order to
+# summarise(): summarise and sum all the transaction amounts of each committee and finally
+# arrange(): arrange these committees in descending order to have the most contributed committees at the top
+
 
 contributions_by_state <- function(state_arg){
   individuals %>%
@@ -65,11 +66,14 @@ contributions_by_state <- function(state_arg){
     summarise(com_groups = sum(transaction_amt)) %>%
     arrange(desc(com_groups)) %>%
     slice(1:10)
-    
+
 }
 
 ```
 
+
+
+### This is a model of what we wanted. Can be deleted after everything is ready to go! :)
 ```{r, message=FALSE, warning=FALSE}
 
 #The following will make up the new data frame "contributions_by_all"
@@ -101,6 +105,10 @@ contributions_by_all <- individuals %>%
 
 #-------------------------------------------
 ### Red State in 2011: Alaska (Diana)
+The first state we will examine is Alaska. Historically, Alaska entered the union as a Democratic state but has "supported Republicans in presidential elections since statehood. The Republican Party has won their electoral college votes in all but one election, this election was in 1964" (). 
+
+Why Alaska? In the year 2011, there were 12 red states, but Alaska was chosen because geographically it is apart from the other 49 states. It would be interesting to see where Alaskans place their contributions.
+
 ```{r, message=FALSE, warning=FALSE}
 # The following will make up the new data frame "contributions_by_alaska" that came about by using the function "contribution_by_state"
 
@@ -129,29 +137,31 @@ tallying_alaska <- contributions_by_alaska %>%
 ```
 
 ### +1 for explaining in a single coherent sentence what we can learn from these data
-The main idea of this bar chart, is to capture the top ten committees and the amount received (by each) from donations made by individuals in the state of Alaska during the 2011 federal election cycle. 
-
-During the 2011 federal election cycle, these were the top ten committees and the amount of money received, by each respectively, from donations made by individuals in the state of Alaska.
+During the 2011 federal election cycle, these were the top ten committees and the amount of money received, by each respectively, from contributions made by individuals in the state of Alaska.
 ```{r, fig.width = 15, fig.height = 10}
 
 # Using ggplot to generate bar plot of the "Top Ten Committees Donated to by Individuals in 2011"
 
 top_ten_cmte_alaska <- subset(contributions_by_alaska, cmte_name %in% tallying_alaska$cmte_name[0:10])
 
-ggplot(top_ten_cmte_alaska, aes(cmte_name, transaction_amt)) +
-  ggtitle("Committees that Received Contributions Made By Individuals in 2011") +
+Alaska_bar_chart <- ggplot(top_ten_cmte_alaska, aes(cmte_name, transaction_amt)) +
   geom_bar(stat = "identity", fill = "olivedrab") +
+  # Title of graph
+  ggtitle("Committees that Received Contributions Made By Individuals in 2011") +
+  # Formatting the bar chart "plane"
   theme_hc() +
   theme(axis.text.x = element_text(color = "black", 
-                           size = 14, family = "Trebuchet MS", angle = 90, hjust = 1, face = "bold"),
+                           size = 16, family = "Trebuchet MS", angle = 90, hjust = 1, face = "bold"),
         axis.text.y = element_text(color = "black", 
-                           size = 14, family = "Trebuchet MS", face = "bold"),
+                           size = 16, family = "Trebuchet MS", face = "bold"),
         axis.ticks.x = element_blank(),
         axis.ticks.y = element_blank(),
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(),
-        plot.title = element_text(lineheight = 1, face="bold")) + 
-  # Committees x- axis
+        plot.title = element_text(lineheight = 1, face="bold", size = 20),
+        axis.title.x = element_text(face = "bold", size = 18),
+        axis.title.y = element_text(face = "bold", size = 18)) + 
+  # Formatting the x-axis
   scale_x_discrete(name = "Recipients of Contributions",
                      expand = c(0,0),
                      labels = c("ACTBLUE" = "ACTBLUE",
@@ -165,7 +175,7 @@ ggplot(top_ten_cmte_alaska, aes(cmte_name, transaction_amt)) +
                                 "ROMNEY FOR PRESIDENT INC." = "ROMNEY FOR PRESIDENT",
                                 "RON PAUL 2012 PRESIDENTIAL CAMPAIGN COMMITTEE INC." = "RON PAUL '12 PRES. CAMPAIGN"
                                  )) +
-  # Contribution Amount y-axis
+  # Formatting the y-axis
   scale_y_continuous(name = "Total Amt. of Contributions",
                      labels = c("0" = "$0",
                               "25000" = "$25k",
@@ -173,7 +183,7 @@ ggplot(top_ten_cmte_alaska, aes(cmte_name, transaction_amt)) +
                               "75000" = "$75k",
                               "100000" = "$100k")) 
 
-
+Alaska_bar_chart
 
 ```
 
@@ -247,7 +257,7 @@ top_ten_cmte_cali <- subset(contributions_by_cali, cmte_name %in% tallying_cali$
 
 ggplot(top_ten_cmte_cali, aes(cmte_name, transaction_amt)) +
   ggtitle("Committees that Received Contributions Made By Individuals in 2011") +
-  geom_bar(stat = "identity", fill = "blue") +
+  geom_bar(stat = "identity", fill = "olivedrab") +
   theme_hc() +
   theme(axis.text.x = element_text(color = "black", 
                            size = 14, family = "Trebuchet MS", angle = 90, face = "bold"),
@@ -278,7 +288,8 @@ ggplot(top_ten_cmte_cali, aes(cmte_name, transaction_amt)) +
                               "25000" = "$25k",
                               "50000" = "$50k",
                               "75000" = "$75k",
-                              "100000" = "$100k")) + coord_flip()
+                              "100000" = "$100k")) + 
+  coord_flip()
 
                                       
 
@@ -333,4 +344,3 @@ Independent expenditure opposing election of candidate
 24Z
 In-kind contribution made to registered filer
 ## ----------------------------------------------------
-
