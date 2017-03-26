@@ -210,19 +210,19 @@ So, even though Alaska is a republican state, there is a divide in idealogies th
 contributions_by_florida <- contributions_by_state(state_arg = "FL")
 
 florida_plot <- ggplot(contributions_by_florida, aes(cmte_name, com_groups)) +
-  ggtitle("Committees that Received Contributions Made By Individuals in 2011") +
-  geom_bar(stat = "identity", fill = "seagreen3") +
+  ggtitle("Committees that Received Contributions in 2011") +
+  geom_bar(stat = "identity", fill = "olivedrab") +
   theme_hc() +
   theme(axis.text.x = element_text(color = "black", 
-                           size = 14, family = "Trebuchet MS", angle = 90, hjust = 1, face = "bold"),
+                           size = 9, family = "Trebuchet MS", angle = 90, hjust = 1, face = "bold"),
         axis.text.y = element_text(color = "black", 
-                           size = 14, family = "Trebuchet MS", face = "bold"),
+                           size = 10, family = "Trebuchet MS", face = "bold"),
         axis.ticks.x = element_blank(),
         axis.ticks.y = element_blank(),
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(),
         plot.title = element_text(lineheight = 1, face="bold"),
-        legend.margin =  ) + 
+        plot.margin = unit(c(1,.5,0,1), "cm")) +
   # Committees x- axis
   scale_x_discrete(name = "Recipients of Contributions",
                      expand = c(0,0),
@@ -241,14 +241,14 @@ florida_plot <- ggplot(contributions_by_florida, aes(cmte_name, com_groups)) +
                                 "ADAM HASNER FOR FOR US HOUSE" = 
                                   "ADAM HASNER FOR HOUSE"
                                  )) +
-  scale_y_continuous(name = "Total amount of contributions in millions",
+  scale_y_continuous(name = "Total amt of contributions",
                      labels = c("0" = "$0",
                                 "1000000" = "$1mill",
                                 "2000000" = "$2mill",
                                 "3000000" = "$3mill",
                                 "4000000" = "$4mill",
                                 "5000000" = "$5mill"
-                                )) +
+                                )) 
   
 
 florida_plot
