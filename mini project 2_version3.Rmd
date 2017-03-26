@@ -138,27 +138,27 @@ tallying_alaska <- contributions_by_alaska %>%
 
 ### +1 for explaining in a single coherent sentence what we can learn from these data
 During the 2011 federal election cycle, these were the top ten committees and the amount of money received, by each respectively, from contributions made by individuals in the state of Alaska.
-```{r, fig.width = 15, fig.height = 10}
+```{r, fig.width = 15, fig.height = 8}
 
 # Using ggplot to generate bar plot of the "Top Ten Committees Donated to by Individuals in 2011"
 
 top_ten_cmte_alaska <- subset(contributions_by_alaska, cmte_name %in% tallying_alaska$cmte_name[0:10])
 
-Alaska_bar_chart <- ggplot(top_ten_cmte_alaska, aes(cmte_name, transaction_amt)) +
+Alaska_bar_chart <- ggplot(contributions_by_alaska, aes(cmte_name, com_groups)) +
   geom_bar(stat = "identity", fill = "olivedrab") +
   # Title of graph
   ggtitle("Committees that Received Contributions Made By Individuals in 2011") +
   # Formatting the bar chart "plane"
   theme_hc() +
   theme(axis.text.x = element_text(color = "black", 
-                           size = 16, family = "Trebuchet MS", angle = 90, hjust = 1, face = "bold"),
+                           size = 17, family = "Trebuchet MS", face = "bold"),
         axis.text.y = element_text(color = "black", 
                            size = 16, family = "Trebuchet MS", face = "bold"),
         axis.ticks.x = element_blank(),
         axis.ticks.y = element_blank(),
+        plot.title = element_text(size = 25, face="bold", family = "Trebuchet MS"),
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(),
-        plot.title = element_text(lineheight = 1, face="bold", size = 20),
         axis.title.x = element_text(face = "bold", size = 18),
         axis.title.y = element_text(face = "bold", size = 18)) + 
   # Formatting the x-axis
@@ -172,11 +172,12 @@ Alaska_bar_chart <- ggplot(top_ten_cmte_alaska, aes(cmte_name, transaction_amt))
                                 "NATIONAL ASSOCIATION OF REALTORS POLITICAL ACTION COMMITTEE" = "NAT. ASSOC. OF REALTORS",
                                 "OBAMA FOR AMERICA" = "OBAMA FOR AMERICA",
                                 "REPUBLICAN NATIONAL COMMITTEE" = "RNC",
-                                "ROMNEY FOR PRESIDENT INC." = "ROMNEY FOR PRESIDENT",
-                                "RON PAUL 2012 PRESIDENTIAL CAMPAIGN COMMITTEE INC." = "RON PAUL '12 PRES. CAMPAIGN"
+                                "ROMNEY FOR PRESIDENT INC." = "ROMNEY FOR \nPRESIDENT",
+                                "RON PAUL 2012 PRESIDENTIAL CAMPAIGN COMMITTEE INC." = "RON PAUL '12 \nPRES. CAMPAIGN"
                                  )) +
   # Formatting the y-axis
   scale_y_continuous(name = "Total Amt. of Contributions",
+                     expand = c(0,0),
                      labels = c("0" = "$0",
                               "25000" = "$25k",
                               "50000" = "$50k",
@@ -243,9 +244,11 @@ tallying_cali
 
 # Using ggplot to generate bar plot of the "Top Ten Committees Donated to by Individuals in 2011 (California)"
 
+contributions_by_cali <- contributions_by_state(state_arg = "CA")
+
 top_ten_cmte_cali <- subset(contributions_by_cali, cmte_name %in% tallying_cali$cmte_name[0:10])
 
-ggplot(top_ten_cmte_cali, aes(cmte_name, transaction_amt)) +
+ggplot(contributions_by_cali, aes(cmte_name, com_groups)) +
   ggtitle("Committees that Received Contributions Made By Individuals in 2011") +
   geom_bar(stat = "identity", fill = "olivedrab") +
   theme_hc() +
@@ -306,6 +309,7 @@ The main idea of this bar chart, is to capture the top ten committees and the am
 
 #-------------------------------------------
 ### Swing State in 2011: Florida (Marta)
+
 The third state we will examine is Florida, or a notoriously known swing state. 
 During the 2011 federal election cycle, these were the top ten committees and the amount of money received, by each respectively, from contributions made by individuals in the state of Florida.
 ```{r}
@@ -374,7 +378,8 @@ Here, we see neither a strong alignment to the Republican party, nor one to the 
 
 
 
-
+#Conclusion
+By only focusing on three states with different political alignements, we wanted to explore whether a political alliance would affect individual committee contributions under $5K. We found that while a specific state, such as California, may have a strong standing with Democratic committee contributions, states such as Alaska and Florida are bit more varied and have committee contributions to both Republican and Democratic committees. Some of the information we discovered surprised us, and some did not. 
 
 
 
@@ -438,30 +443,3 @@ Here, we see neither a strong alignment to the Republican party, nor one to the 
 
 
 #---------------------------------
-
-
-
-#+1 for explaining in a single coherent sentence what we can learn from these data
-#The main idea of this is to capture the most common monetary ammount crontributed to the 2011-2012 federal election cycle by political entities.
-
-
-
-#+1 blog post text provides context or background useful in interpreting the graphic
-#The following code creates a data visualization in the form of a histogram regarding contributions to the federal election cycle of 2011-2012. Here, the histogram presents 11 bins ranging from $0 of monetary contributions to $5000. The key of this visualization is to allow the user to explore the number of different values of the contributions made by political entities. The different political entities include contributions made by a candidate, a candidate committee, committee, individual, organization, politial action committee or a party organization. One example can be to explore the different number of contributions made by CCM's, or candidate commitees, where contributions of about $1000 were the most common. The data used in the visualization stems from the Federal Election Committee (FEC), whose statute limits the sources and amounts of the contributions used to finance federal elections and requires public disclosure of campaign finance information. This type of analysis is useful in helping regulate and predict what values are expected/common from a specific entity. This can assist if there is an unprecedented or extreme dip or spike in the average monetary contribution, where the FEC can then investigate if necessary.
-
-
-## New Information--------------------------------------
-A political action committee (PAC) is a type of organization that pools campaign contributions from members and donates those funds to campaign for or against candidates, ballot initiatives, or legislation.
-
-
-Common transaction types
-
-24K
-Contribution made to nonaffiliated committee
-
-24A
-Independent expenditure opposing election of candidate
-
-24Z
-In-kind contribution made to registered filer
-## ----------------------------------------------------
