@@ -240,7 +240,12 @@ ggplot(contributions_by_florida, aes(cmte_name, com_groups)) +
                                   "ADAM HASNER FOR HOUSE"
                                  )) +
   # Formatting the y-axis
-  scale_y_continuous(name = "Total Amt. of Contributions")
+  scale_y_continuous(name = "Total Amt. of Contributions",
+                     labels = c("0" = "$0",
+                                "1000000" = "$1mill",
+                                "2000000" = "$2mill",
+                                "3000000" = "$3mill",
+                                "4000000" = "4mill"))
 
 ```
 
