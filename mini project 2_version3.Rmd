@@ -188,6 +188,11 @@ So, even though Alaska is a republican state, there is a divide in idealogies th
 ```{r, message=FALSE, warning=FALSE}
 contributions_by_florida <- contributions_by_state(state_arg = "FL")
 
+ggplot(contributions_by_florida, aes(cmte_name, transaction_amt)) +
+  ggtitle("Committees that Received Contributions Made By Individuals in 2011") +
+  geom_bar(stat = "identity", fill = "pink") +
+  
+  
 ```
 
 
