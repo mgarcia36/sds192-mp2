@@ -83,7 +83,7 @@ contributions_by_all <- individuals %>%
          cmte_id)%>%
   group_by(cmte_name) %>%
   summarise(com_groups = sum(transaction_amt)) %>%
-  arrange(desc(com_groups)) 
+  arrange(desc(com_groups))
   
 ```
 
