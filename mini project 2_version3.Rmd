@@ -4,6 +4,7 @@ author: "Diana Fierros-Pina, Karen Diaz, Marta Garcia"
 date: "March 20, 2017"
 output: html_document
 ---
+## Need contributions and say positive
 
 ```{r, message=FALSE}
 require(tidyverse)
@@ -117,7 +118,6 @@ tallying_alaska <- contributions_by_alaska %>%
   tally(sort = TRUE)
 ```
 
-
 ### +1 for explaining in a single coherent sentence what we can learn from these data
 The main idea of this bar chart, is to capture the top ten committees and the amount received (by each) from donations made by individuals in the state of Alaska during the 2011 federal election cycle. 
 
@@ -133,7 +133,7 @@ ggplot(top_ten_cmte_alaska, aes(cmte_name, transaction_amt)) +
   geom_bar(stat = "identity", fill = "olivedrab") +
   theme_hc() +
   theme(axis.text.x = element_text(color = "black", 
-                           size = 14, family = "Trebuchet MS", angle = 90, face = "bold"),
+                           size = 14, family = "Trebuchet MS", angle = 90, hjust = 1, face = "bold"),
         axis.text.y = element_text(color = "black", 
                            size = 14, family = "Trebuchet MS", face = "bold"),
         axis.ticks.x = element_blank(),
@@ -174,7 +174,7 @@ The data visualization previously presented is a bar plot regarding the contribu
 The key of this visualization is to allow the user to explore the different committees. 
 The committees included are: Actblue, Alaska Democratic Party, Alaskans for Begich 2014, Alaskans for Don Young Inc., DNC (DNC Services Corporation/Democratic National Committee), Nat. Assoc. of Realtors (National Association of Realtors Political Action Committee), Obama for America, RNC (Republican National Committee), and Romney for President Inc., Ron Paul '12 Pres. Campaign.
 
-It's important to not that even though Alaska is a republican state 4 out of 10 of the committees (in this visualization) are Democrats, which are the Alaskan Democratic Party, Alaskans for Begich 2014, DNC and Obama for America. Although Actblue is independent of the Democratic Party itself and does not endorse individual candidates, this committee enables anyone to raise money on the Internet for the Democratic Party candidates of their choice. One of the committees is libertarian which is the committee named Ron Paul '12 Presidential Campaign. 
+It's important to not that even though Alaska is a republican state, 4 out of 10 of the committees (in this visualization) are Democrats, which are the Alaskan Democratic Party, Alaskans for Begich 2014, DNC and Obama for America. Although Actblue is independent of the Democratic Party itself and does not endorse individual candidates, this committee enables anyone to raise money on the Internet for the Democratic Party candidates of their choice. One of the committees is libertarian which is the committee named Ron Paul '12 Presidential Campaign. 
 
 So, even though Alaska is a republican state, there is a divide in idealogies throughout Alaskans in where they wish their contributions should go to.
 
