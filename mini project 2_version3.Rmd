@@ -5,11 +5,10 @@ date: "March 20, 2017"
 output: html_document
 ---
 
-# Possible title? "Where did the people's political contributions go to in 2011?"
-## Need contributions and say positive
+## Where did the people's political contributions go to in 2011?
 
 
-```{r, message=FALSE}
+```{r, message=FALSE, include=FALSE, warning=FALSE}
 # Packages needed
 require(tidyverse)
 require(ggthemes)
@@ -18,7 +17,7 @@ require(lubridate)
 ```
 
 
-```{r, include=FALSE}
+```{r, message=False, include=FALSE, warning=FALSE}
 # Datasets being used
 load("committees.rda")
 load("individuals.rda")
@@ -35,7 +34,7 @@ load("individuals.rda")
 ### Restrictions: The (individual's) occupations included in this dataset range from homemaker to veternarian to teacher, and almost everything in between. These contributions ranged from $0 to $750,000, but we decided to restrict this range from $0 to $5000. This range is subjective to what we think is a "realistic" measure to what people can "afford" to contribute to political committees and see how much these smaller contributions add up to in the end. 
 
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, include=FALSE, warning=FALSE}
 # The following function will make a new data frame called "contributions_by_state"
 # The function will allow the user to input a state abbreviation (including DC) or "state_arg" to get the top 10 committees that individuals within state have donated to
 # mutate(): mutates variable "transaction_dt" from individuals data frame to new variable transaction date, so it is a 'date' type
@@ -72,40 +71,8 @@ contributions_by_state <- function(state_arg){
 ```
 
 
-
-### This is a model of what we wanted. Can be deleted after everything is ready to go! :)
-```{r, message=FALSE, warning=FALSE}
-
-#The following will make up the new data frame "contributions_by_all"
-#mutate() mutates variable "transaction_dt" from individuals data frame to new variable transaction date, so it is a 'date' type
-#filter() filters rows that have the desired state, entity_type, transaction_date and transaction_amt
-#inner_join to join individuals and committees data frames by column "cmte_id"
-#select() selects specific columns from data frame that we're interested in
-
-contributions_by_all <- individuals %>%
-  mutate(transaction_date = mdy(transaction_dt)) %>%
-  filter(state == "NY", 
-         entity_type == "PAC",
-         transaction_date >= "2011-01-01",
-         transaction_date <= "2011-12-31",
-         transaction_amt >= 0 & transaction_amt <= 5000) %>%
-  inner_join(committees, by = "cmte_id") %>%
-  select(transaction_type, 
-         entity_type, 
-         state, 
-         transaction_date, 
-         transaction_amt,
-         cmte_name,
-         cmte_id)%>%
-  group_by(cmte_name) %>%
-  summarise(com_groups = sum(transaction_amt)) %>%
-  arrange(desc(com_groups))
-  
-```
-
-#-------------------------------------------
-### Red State in 2011: Alaska (Diana)
-The first state we will examine is Alaska. Historically, Alaska entered the union as a Democratic state but has "supported Republicans in presidential elections since statehood. The Republican Party has won their electoral college votes in all but one election, this election was in 1964" (). 
+### Red State in 2011: Alaska 
+The first state we will examine is Alaska. Historically, Alaska entered the union as a Democratic state but has supported Republicans in presidential elections since statehood. The Republican Party has won their electoral college votes in all but one election, this election was in 1964. 
 
 Why Alaska? In the year 2011, there were 12 red states, but Alaska was chosen because geographically it is apart from the other 49 states. It would be interesting to see where Alaskans place their contributions.
 
@@ -116,37 +83,35 @@ contributions_by_alaska <- contributions_by_state(state_arg = "AK")
 
 ```
 
-### +1 for explaining in a single coherent sentence what we can learn from these data
+
+### What are we looking at?
 During the 2011 federal election cycle, these were the top ten committees and the amount of money received, by each respectively, from contributions made by individuals in the state of Alaska.
-```{r, fig.width = 15, fig.height = 8}
+```{r, fig.width = 8, fig.height = 3}
 
-# Using ggplot to generate bar plot of "Committees that Received Contributions Made By Individuals in 2011"
-
+# Using ggplot to generate bar plot of "Committees that Received Contributions Made By Individuals in 2011 that is stored in the object: Alaska plot"
 
 Alaska_bar_chart <- ggplot(contributions_by_alaska, aes(cmte_name, com_groups)) +
   geom_bar(stat = "identity", fill = "olivedrab") +
   # Title of graph
-  ggtitle("Committees that Received Contributions Made By Individuals in 2011") +
+  ggtitle("Committees that Received Contributions Made By Individuals in 2011 (Alaska)") +
   # Formatting the bar chart "plane"
   theme_hc() +
-  theme(axis.text.x = element_text(color = "black", 
-                           size = 17, family = "Trebuchet MS", face = "bold"),
-        axis.text.y = element_text(color = "black", 
-                           size = 16, family = "Trebuchet MS", face = "bold"),
+  theme(axis.text = element_text(color = "black", 
+                           size = 11, family = "Trebuchet MS", face = "bold"),
         axis.ticks.x = element_blank(),
         axis.ticks.y = element_blank(),
-        plot.title = element_text(size = 25, face="bold", family = "Trebuchet MS"),
+        plot.title = element_text(size = 18, face="bold", family = "Trebuchet MS"),
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(),
-        axis.title.x = element_text(face = "bold", size = 18),
-        axis.title.y = element_text(face = "bold", size = 18)) + 
+        axis.title = element_text(face = "bold", family = "Trebuchet MS", size = 15),
+        plot.margin = unit(c(1,.5,1,1), "cm")) + 
   # Formatting the x-axis
   scale_x_discrete(name = "Recipients of Contributions",
                      expand = c(0,0),
                      labels = c("ALASKA DEMOCRATIC PARTY" = "AK DEM. PARTY",
                                 "ALASKA REPUBLICAN PARTY" = "AK REP. PARTY",
-                                "ALASKANS FOR BEGICH 2014" = "AK FOR BEGICH '14",
-                                "ALASKANS FOR DON YOUNG INC." = "AK FOR DON YOUNG INC.",
+                                "ALASKANS FOR BEGICH 2014" = "AK FOR \nBEGICH '14",
+                                "ALASKANS FOR DON YOUNG INC." = "AK FOR \nDON YOUNG INC.",
                                 "DNC SERVICES CORPORATION/DEMOCRATIC NATIONAL COMMITTEE" = "DNC",
                                 "GCI PAC" = "GCI PAC",
                                 "OBAMA FOR AMERICA" = "OBAMA FOR AMERICA",
@@ -162,110 +127,74 @@ Alaska_bar_chart <- ggplot(contributions_by_alaska, aes(cmte_name, com_groups)) 
                               "50000" = "$50k",
                               "75000" = "$75k",
                               "100000" = "$100k")) 
-
+# Calling ggplot object
 Alaska_bar_chart
 
 ```
 
-
-### +1 blog post text provides context or background useful in interpreting the graphic
-
 The data visualization previously presented is a bar plot regarding the contributions made in the state of Alaska in the year 2011. Each bar represents one committee and the height of the bar represents the $ amount of all the contributions made by individuals. 
-The key of this visualization is to allow the user to explore the different committees. 
-The committees included are: Actblue, Alaska Democratic Party, Alaskans for Begich 2014, Alaskans for Don Young Inc., DNC (DNC Services Corporation/Democratic National Committee), Nat. Assoc. of Realtors (National Association of Realtors Political Action Committee), Obama for America, RNC (Republican National Committee), and Romney for President Inc., Ron Paul '12 Pres. Campaign.
+The committees included are: Alaska Democratic Party, Alaska Republican Party, Alaskans for Begich 2014, Alaskans for Don Young Inc., DNC (DNC Services Corporation/Democratic National Committee), GCI PAC, Obama for America, RNC (Republican National Committee), Romney for President Inc., and Ron Paul '12 Pres. Campaign.
 
-It's important to not that even though Alaska is a republican state, 4 out of 10 of the committees (in this visualization) are Democrats, which are the Alaskan Democratic Party, Alaskans for Begich 2014, DNC and Obama for America. Although Actblue is independent of the Democratic Party itself and does not endorse individual candidates, this committee enables anyone to raise money on the Internet for the Democratic Party candidates of their choice. One of the committees is libertarian which is the committee named Ron Paul '12 Presidential Campaign. 
+It's important to not that even though Alaska is a republican state, 4 out of 10 of the committees (in this visualization) are Democrats, which are the Alaskan Democratic Party, Alaskans for Begich 2014, DNC and Obama for America. One of the committees is libertarian which is the committee named Ron Paul '12 Presidential Campaign. 
 
 So, even though Alaska is a republican state, there is a divide in idealogies throughout Alaskans in where they wish their contributions should go to.
 
 
-#-------------------------------------------
 
 
-#-------------------------------------------
-<<<<<<< HEAD
-=======
-### Blue State in 2011: California (Karen)
+### Blue State in 2011: California
 ```{r, message=FALSE, warning=FALSE}
-# The following will make up the new data frame "contributions_by_alaska"
-# mutate() mutates variable "transaction_dt" from individuals data frame to new variable transaction date, so it is a 'date' type
-# filter() filters rows that have the desired state, entity_type, transaction_date and transaction_amt
-# inner_join to join individuals and committees data frames by column "cmte_id"
-# select() selects specific columns from data frame that we're interested in
-
-
-contributions_by_cali <- individuals %>%
-  mutate(transaction_date = mdy(transaction_dt)) %>%
-  filter(state == "CA", 
-         entity_type == "IND",
-         transaction_date >= "2011-01-01",
-         transaction_date <= "2011-12-31",
-         transaction_amt >= 0 & transaction_amt <= 5000) %>%
-  inner_join(committees, by = "cmte_id") %>%
-  select(transaction_type, 
-         entity_type, 
-         state, 
-         transaction_date, 
-         transaction_amt,
-         cmte_name,
-         cmte_id)
-
-tallying_cali <- contributions_by_cali %>%
-  group_by(cmte_name) %>%
-  tally(sort = TRUE)
-
-contributions_by_cali
-tallying_cali
-```
-
-
-```{r, fig.width = 15, fig.height = 10}
-
-# Using ggplot to generate bar plot of the "Top Ten Committees Donated to by Individuals in 2011 (California)"
+# The following will make up the new data frame "contributions_by_cali" that came about by using the function "contribution_by_state"
 
 contributions_by_cali <- contributions_by_state(state_arg = "CA")
 
-top_ten_cmte_cali <- subset(contributions_by_cali, cmte_name %in% tallying_cali$cmte_name[0:10])
+```
 
-ggplot(contributions_by_cali, aes(cmte_name, com_groups)) +
-  ggtitle("Committees that Received Contributions Made By Individuals in 2011") +
+
+```{r, fig.width = 8, fig.height = 3}
+
+# Using ggplot to generate bar plot of the "Committees that Received Contributions Made By Individuals in 2011 (California)" that is stored in the object: California plot"
+
+California_plot <- ggplot(contributions_by_cali, aes(cmte_name, com_groups)) +
+  # Plot title
+  ggtitle("Committees that Received Contributions Made By Individuals in 2011 (California)") +
   geom_bar(stat = "identity", fill = "olivedrab") +
+  # Formatting the bar plot "plane"
   theme_hc() +
-  theme(axis.text.x = element_text(color = "black", 
-                           size = 14, family = "Trebuchet MS", angle = 90, face = "bold"),
-        axis.text.y = element_text(color = "black", 
-                           size = 14, family = "Trebuchet MS", face = "bold"),
+  theme(axis.text = element_text(color = "black", 
+                           size = 11, family = "Trebuchet MS",face = "bold"),
         axis.ticks.x = element_blank(),
         axis.ticks.y = element_blank(),
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(),
-        plot.title = element_text(lineheight = 1, face="bold")) + 
-  # Committees x- axis
+        plot.title = element_text(size = 18, lineheight = 1, face="bold"),
+        axis.title = element_text(face = "bold", family = "Trebuchet MS", size = 15),
+        plot.margin = unit(c(1,.5,1,1), "cm")) + 
+  # Formatting x- axis
   scale_x_discrete(name = "Recipients of Contributions",
                      expand = c(0,0),
                      labels = c("ACTBLUE" = "ACTBLUE",
                                 "DNC SERVICES CORPORATION/DEMOCRATIC NATIONAL COMMITTEE" = "DNC",
-                                "DEMOCRATIC SENATORIAL CAMPAIGN COMMITTEE" = "DEMOCRATIC SENATORIAL CAMPAIGN COMMITTEE",
-                                "DEMOCRATIC CONGRESSIONAL CAMPAIGN COMMITTEE" = "DEMOCRATIC CONGRESSIONAL CAMPAIGN COMMITTEE",
+                                "BERMAN FOR CONGRESS" = "BERMAN FOR \nCONGRESS",
+                                "DEMOCRATIC CONGRESSIONAL CAMPAIGN COMMITTEE" = "DEM. CONGRESSIONAL \nCAMPAIGN COMMITTEE",
                                 "EMILY'S LIST" = "EMILY'S LIST",
-                                "OBAMA FOR AMERICA" = "OBAMA FOR AMERICA",
-                                "OBAMA VICTORY FUND 2012" = "OBAMA VICTORY FUND 2012",
+                                "OBAMA FOR AMERICA" = "OBAMA FOR \nAMERICA",
+                                "OBAMA VICTORY FUND 2012" = "OBAMA VICTORY \nFUND 2012",
                                 "REPUBLICAN NATIONAL COMMITTEE" = "RNC",
-                                "ROMNEY FOR PRESIDENT INC." = "ROMNEY FOR PRESIDENT",
-                                "RON PAUL 2012 PRESIDENTIAL CAMPAIGN COMMITTEE INC." = "RON PAUL '12 PRES. CAMPAIGN"
+                                "RICKPERRY.ORG INC" = "RICKPERRY.ORG",
+                                "ROMNEY FOR PRESIDENT INC." = "ROMNEY FOR \nPRESIDENT",
+                                "RON PAUL 2012 PRESIDENTIAL CAMPAIGN COMMITTEE INC." = "RON PAUL \n'12 PRES. CAMPAIGN"
                                  )) +
-  # Contribution Amount y-axis
+  # Formatting y-axis
   scale_y_continuous(name = "Total Amt. of Contributions",
+                     expand = c(0,0),
                      labels = c("0" = "$0",
-                              "25000" = "$25k",
-                              "50000" = "$50k",
-                              "75000" = "$75k",
-                              "100000" = "$100k")) + 
-  coord_flip()
-
-                                      
-
-
+                              "2000000" = "$2M",
+                              "4000000" = "$4M",
+                              "6000000" = "$6M",
+                              "8000000" = "$8M")) 
+# Calling ggplot object
+California_plot
 
 ```
 
@@ -283,36 +212,31 @@ Here, we see a strong alingment to democratic ideology as 7 of the top ten commi
 The main idea of this bar chart, is to capture the top ten committees and the amount received (by each) from donations made by individuals in 3 specific states during the 2011 federal election cycle. 
 
 
-#-------------------------------------------
 
-
-#-------------------------------------------
 ### Swing State in 2011: Florida (Marta)
 
 The third state we will examine is Florida, or a notoriously known swing state. 
 During the 2011 federal election cycle, these were the top ten committees and the amount of money received, by each respectively, from contributions made by individuals in the state of Florida.
-```{r}
+```{r, message=FALSE, warning=FALSE}
 contributions_by_florida <- contributions_by_state(state_arg = "FL")
 ```
 
 
 ```{r, fig.width = 8, fig.height = 3}
-# Using ggplot to generate bar plot of "Committees that Received Contributions Made by Individuals in 2011 (Florida)"
+# Using ggplot to generate bar plot of "Committees that Received Contributions Made by Individuals in 2011 (Florida)" that will be stored in the object: Florida_plot
 
-florida_plot <- ggplot(contributions_by_florida, aes(cmte_name, com_groups)) +
+Florida_plot <- ggplot(contributions_by_florida, aes(cmte_name, com_groups)) +
   ggtitle("Committees that Received Contributions Made by Individuals in 2011 (Florida)") +
   geom_bar(stat = "identity", fill = "olivedrab") +
   theme_hc() +
-  theme(axis.text.x = element_text(color = "black", 
+  theme(axis.text = element_text(color = "black", 
                            size = 11, family = "Trebuchet MS", face = "bold"),
-        axis.text.y = element_text(color = "black", 
-                           size = 11, family = "Trebuchet MS", face = "bold"),
-        axis.title = element_text(family = "Trebuchet MS", face = "bold"),
+        axis.title = element_text(size = 15, family = "Trebuchet MS", face = "bold"),
         axis.ticks.x = element_blank(),
         axis.ticks.y = element_blank(),
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(),
-        plot.title = element_text(lineheight = 1, face="bold", family = "Trebuchet MS"),
+        plot.title = element_text(size = 18, lineheight = 1, face="bold", family = "Trebuchet MS"),
         plot.margin = unit(c(1,.5,1,1), "cm")) +
   # Committees x- axis
   scale_x_discrete(name = "Recipients of Contributions",
@@ -342,7 +266,8 @@ florida_plot <- ggplot(contributions_by_florida, aes(cmte_name, com_groups)) +
                                 "5000000" = "$5M"
                                 )) 
 
-florida_plot
+# Calling ggplot object
+Florida_plot
 
 ```
 +1 blog post text provides context or useful information in interpreting the graphic
@@ -357,7 +282,7 @@ Here, we see neither a strong alignment to the Republican party, nor one to the 
 
 
 
-#Conclusion
+### Conclusion
 By only focusing on three states with different political alignements, we wanted to explore whether a political alliance would affect individual committee contributions under $5K. We found that while a specific state, such as California, may have a strong standing with Democratic committee contributions, states such as Alaska and Florida are bit more varied and have committee contributions to both Republican and Democratic committees. Some of the information we discovered surprised us, and some did not. 
 
 
