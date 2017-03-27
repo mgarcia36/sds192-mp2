@@ -23,16 +23,15 @@ load("individuals.rda")
 
 ```
 
+Have you ever wondered where regular folks like you and I have politically contributed to in the year 2011? Well, look no further, you are about to see three different states - red, blue and swing - in which committees were most popular to contribute by individuals. 
 
-### Have you ever wondered where regular folks like you and I have politically contributed to in the year 2011? Well, look no further, you are about to see three different states - red, blue and swing - in which committees were most popular to contribute by individuals. 
+Background: The "committees" and "individuals" datasets helped us answer this question with some filtering, we were able to cut these immense and overwhelming datasets into a "smaller" dataset with observations that we were meant to answer the question in question. 
 
-### Background: The "committees" and "individuals" datasets helped us answer this question with some filtering, we were able to cut these immense and overwhelming datasets into a "smaller" dataset with observations that we were meant to answer the question in question. 
+Why the year 2011? We were interested to see what committees individuals were placing their money pre-election year. Would it be to for Obama's Re-election Campaign? Would it be for Romney's Presidential Election Campaign? Or Ron Paul's Presidential Election? 
 
-### Why the year 2011? We were interested to see what committees individuals were placing their money pre-election year. Would it be to for Obama's Re-election Campaign? Would it be for Romney's Presidential Election Campaign? Or Ron Paul's Presidential Election? 
+Restrictions: The (individual's) occupations included in this dataset range from homemaker to veternarian to teacher, and almost everything in between. These contributions ranged from $0 to $750,000, but we decided to restrict this range from $0 to $5000. This range is subjective to what we think is a "realistic" measure to what people can "afford" to contribute to political committees and see how much these smaller contributions add up to in the end. 
 
-### Restrictions: The (individual's) occupations included in this dataset range from homemaker to veternarian to teacher, and almost everything in between. These contributions ranged from $0 to $750,000, but we decided to restrict this range from $0 to $5000. This range is subjective to what we think is a "realistic" measure to what people can "afford" to contribute to political committees and see how much these smaller contributions add up to in the end. 
-
-
+#### Our function: contribution_by_state
 ```{r, message=FALSE, include=FALSE, warning=FALSE}
 # The following function will make a new data frame called "contributions_by_state"
 # The function will allow the user to input a state abbreviation (including DC) or "state_arg" to get the top 10 committees that individuals within state have donated to
@@ -69,7 +68,6 @@ contributions_by_state <- function(state_arg){
 
 ```
 
-
 ### Red State in 2011: Alaska 
 The first state we will examine is Alaska. Historically, Alaska entered the union as a Democratic state but has supported Republicans in presidential elections since statehood. The Republican Party has won their electoral college votes in all but one election, this election was in 1964. 
 
@@ -81,7 +79,6 @@ Why Alaska? In the year 2011, there were 12 red states, but Alaska was chosen be
 contributions_by_alaska <- contributions_by_state(state_arg = "AK")
 
 ```
-
 
 ### What are we looking at?
 During the 2011 federal election cycle, these were the top ten committees and the amount of money received, by each respectively, from contributions made by individuals in the state of Alaska.
@@ -141,7 +138,6 @@ So, even though Alaska is a republican state, there is a divide in idealogies th
 
 
 ### Blue State in 2011: California
-
 The second state that is examined is California. California was chosen because it is one of the largest blue states in comparison to other blue states in America. From 1952 until 1992, Republicans won California in every election except the election of 1964. The immigration of Hispanic Americans and Asian Americans and migration of northern liberals, who tend to vote Democratic, and the flight of white, middle and upper-middle class suburbanites out of the state shifted the balance in favor of the Democratic Party. 
 
 What we also wanted to investigate with California is the true diversity of political alignment due to its immense size and population. In addition, because of its recent shift from Republican to Democratic ideology in 1992, it would be interesting to see what are the commitees most contributed to and the diversity of campaigns/causes Californians support.
@@ -156,7 +152,8 @@ contributions_by_cali <- contributions_by_state(state_arg = "CA")
 During the 2011 federal election cycle, these were the top ten committees and the amount of money received, by each respectively, from contributions made by individuals in the state of California.
 
 ```{r, warning=FALSE, message=FALSE, fig.width = 8, fig.height = 3}
-# Using ggplot to generate bar plot of the "Committees that Received Contributions Made By Individuals in 2011 (California)" that is stored in the object: California plot"
+# Using ggplot to generate bar plot of the "Committees that Received Contributions Made By Individuals in 2011 
+# (California)" that is stored in the object: California plot
 
 California_plot <- ggplot(contributions_by_cali, aes(cmte_name, com_groups)) +
   # Plot title
@@ -211,16 +208,13 @@ The committees included are: Actblue, Berman for Congress, Democratic Congressio
 Here, we see a strong alignment to democratic ideology as 6 of the top ten committees that received contributions from individuals are Democrat. However, it is important to note that although a liberal idealogy is most common, there is still a  Republican presence shown through the Romney for President campaign, which received almost the same amount of contributions as the Obama for America committee. There is also a Libertarian presence represented through the Ron Paul '12 Pres. Campaign. So, we can say there are a variety of political ideologies represented. One last interesting point to make is the ammount of support directly made to the Obama campaign in this state, which demonstates the preferred presidential candidate in California.
 
 
-
-
 ### Swing State in 2011: Florida
-
 The third state we will examine is Florida, or a notoriously known swing state. 
 During the 2011 federal election cycle, these were the top ten committees and the amount of money received, by each respectively, from contributions made by individuals in the state of Florida.
+
 ```{r, message=FALSE, warning=FALSE}
 contributions_by_florida <- contributions_by_state(state_arg = "FL")
 ```
-
 
 ### What are we looking at?
 During the 2011 federal election cycle, these were the top ten committees and the amount of money received, by each respectively, from contributions made by individuals in the state of Florida.
@@ -279,10 +273,5 @@ The committees included are: Adam Hasner for US House, Bill Nelson for US Senate
 
 Here, we see neither a strong alignment to the Republican party, nor one to the Democratic party. Upon futher research, we find out Adam Hasner, George Lemeieux, Mike Haridopolos, the RNC (Republican National Committee) and Romney for President are all committees supporting Republican candidates, with the remaining 5 supporting Democratic candidates. Although Obama for America does sit within the top 4 committees contributed to, the amounts of money contributed to Romney, Mike Haridopolos, and Bill Nelson are so vast that the $1,948,666 donated to Obama for America looks small and insignificant. However, if we were to sum the Obama for America and Obama Victory Fund 2012 contributions, the sum would be slightly greater than Bill Nelson's amount, who was also a Democratic candidate. Despite all the contributions made to Romney's campaign, Obama ending up winning Florida's electoral votes in the 2012 election. Another important fact to note is that Bill Nelson was running for his third term in the Senate, so he was an incumbent. There appears to be a divide in ideologies within Florida.
 
-
-
 ### Tying it all together
 By only focusing on three states with different political alignements, we wanted to explore whether a political alliance would affect individual committee contributions under $5K. We found that while a specific state, such as California, may have a strong standing with Democratic committee contributions, states such as Alaska and Florida are a bit more varied and have committee contributions to both Republican and Democratic committees. Some of the information we discovered surprised us, and some did not. 
-
-
-
