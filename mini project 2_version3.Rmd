@@ -16,7 +16,7 @@ require(lubridate)
 ```
 
 
-```{r, message=False, include=FALSE, warning=FALSE}
+```{r}
 # Datasets being used
 load("committees.rda")
 load("individuals.rda")
@@ -155,8 +155,7 @@ contributions_by_cali <- contributions_by_state(state_arg = "CA")
 ### What are we looking at?
 During the 2011 federal election cycle, these were the top ten committees and the amount of money received, by each respectively, from contributions made by individuals in the state of California.
 
-```{r, fig.width = 8, fig.height = 3}
-
+```{r, warning=FALSE, message=FALSE, fig.width = 8, fig.height = 3}
 # Using ggplot to generate bar plot of the "Committees that Received Contributions Made By Individuals in 2011 (California)" that is stored in the object: California plot"
 
 California_plot <- ggplot(contributions_by_cali, aes(cmte_name, com_groups)) +
@@ -225,7 +224,7 @@ contributions_by_florida <- contributions_by_state(state_arg = "FL")
 
 ### What are we looking at?
 During the 2011 federal election cycle, these were the top ten committees and the amount of money received, by each respectively, from contributions made by individuals in the state of Florida.
-```{r, fig.width = 8, fig.height = 3}
+```{r, message=FALSE, warning=FALSE, fig.width = 8, fig.height = 3}
 # Using ggplot to generate bar plot of "Committees that Received Contributions Made by Individuals in 2011 (Florida)" that will be stored in the object: Florida_plot
 
 Florida_plot <- ggplot(contributions_by_florida, aes(cmte_name, com_groups)) +
