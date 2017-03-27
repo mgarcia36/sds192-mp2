@@ -142,9 +142,45 @@ So, even though Alaska is a republican state, there is a divide in idealogies th
 
 
 
+<<<<<<< HEAD
 ### Blue State in 2011: California
 ```{r, message=FALSE, warning=FALSE}
 # The following will make up the new data frame "contributions_by_cali" that came about by using the function "contribution_by_state"
+=======
+#-------------------------------------------
+<<<<<<< HEAD
+=======
+### Blue State in 2011: California (Karen)
+
+The second state that is examined is California. California was chosen because it is one of the largest blue states in comparison to other blue states in America. From 1952 until 1992, Republicans won California in every election except the election of 1964. The immigration of Hispanic Americans and Asian Americans and migration of northern liberals, who tend to vote Democratic, and the flight of white, middle and upper-middle class suburbanites out of the state shifted the balance in favor of the Democratic Party. 
+
+What we also wanted to investigate with California is the true diversity of political alignment due to its immense size and population. In addition, because of it's recent shift from Republican to Democratic ideology in 1992, it would be interesting to see what are the commitees most contributed to and the diversity of campaigns/causes Californians support.
+
+
+```{r, message=FALSE, warning=FALSE}
+# The following will make up the new data frame "contributions_by_cali"
+# mutate() mutates variable "transaction_dt" from individuals data frame to new variable transaction date, so it is a 'date' type
+# filter() filters rows that have the desired state, entity_type, transaction_date and transaction_amt
+# inner_join to join individuals and committees data frames by column "cmte_id"
+# select() selects specific columns from data frame that we're interested in
+
+
+contributions_by_cali <- individuals %>%
+  mutate(transaction_date = mdy(transaction_dt)) %>%
+  filter(state == "CA", 
+         entity_type == "IND",
+         transaction_date >= "2011-01-01",
+         transaction_date <= "2011-12-31",
+         transaction_amt >= 0 & transaction_amt <= 5000) %>%
+  inner_join(committees, by = "cmte_id") %>%
+  select(transaction_type, 
+         entity_type, 
+         state, 
+         transaction_date, 
+         transaction_amt,
+         cmte_name,
+         cmte_id)
+>>>>>>> 528ace3a891565e4896b091c9bb6b3db6443eb50
 
 contributions_by_cali <- contributions_by_state(state_arg = "CA")
 
@@ -153,11 +189,16 @@ contributions_by_cali <- contributions_by_state(state_arg = "CA")
 
 ```{r, fig.width = 8, fig.height = 3}
 
+<<<<<<< HEAD
 # Using ggplot to generate bar plot of the "Committees that Received Contributions Made By Individuals in 2011 (California)" that is stored in the object: California plot"
 
 California_plot <- ggplot(contributions_by_cali, aes(cmte_name, com_groups)) +
   # Plot title
   ggtitle("Committees that Received Contributions Made By Individuals in 2011 (California)") +
+=======
+ggplot(contributions_by_cali, aes(cmte_name, com_groups)) +
+  ggtitle("Committees that Received Contributions Made By Individuals in 2011") +
+>>>>>>> 528ace3a891565e4896b091c9bb6b3db6443eb50
   geom_bar(stat = "identity", fill = "olivedrab") +
   # Formatting the bar plot "plane"
   theme_hc() +
@@ -189,12 +230,23 @@ California_plot <- ggplot(contributions_by_cali, aes(cmte_name, com_groups)) +
   scale_y_continuous(name = "Total Amt. of Contributions",
                      expand = c(0,0),
                      labels = c("0" = "$0",
+<<<<<<< HEAD
                               "2000000" = "$2M",
                               "4000000" = "$4M",
                               "6000000" = "$6M",
                               "8000000" = "$8M")) 
 # Calling ggplot object
 California_plot
+=======
+                              "25000" = "$25k",
+                              "50000" = "$50k",
+                              "75000" = "$75k",
+                              "100000" = "$100k")) 
+
+                                      
+
+
+>>>>>>> 528ace3a891565e4896b091c9bb6b3db6443eb50
 
 ```
 
@@ -205,7 +257,7 @@ The second data visualization presented is a bar plot regarding the contribution
  
 The committees included are: Actblue, Democratic Congressional Campaign Committee, Democratic Senatorial Campaign Committee, Democratic Congressional Campaign Committee, DNC (DNC Services Corporation/Democratic National Committee), Emily's List, Obama Victory Fund 2012, Obama for America, RNC (Republican National Committee), Romney for President Inc., Ron Paul '12 Pres. Campaign.
 
-Here, we see a strong alingment to democratic ideology as 7 of the top ten committees that received contributions from individuals are Democrat. However, it is important to note that although a liberal idealogy is most common, there is still a  Republican presence shown through the Romney for President campaign, which received an almost equal amount of contributions as the Obama for America committee. There is also a Libretarian presence represented through the Ron Paul '12 Pres. Campaign. So, we can say there are a variety of political ideologies represented. Another important thing to note is that there are more contributions being made to presidential campaigns than those for the RNC, DNC, Democratic Senatorial Campaign Committee, etc. In this case, it is most important to individuals in Califonia to make monetary contributions to the face of America, the president, than it is to make contributions to other political branches such as the senate, congress, etc. This is interesting because typically, these branches of the government have the most say in regards to legislation and health care, the federal budget, etc. One last interesting point to make is the ammount of support directly made to the Obama campaign in this state, which demonstates the preferred presidential candidate. Howver, one unique entity is Emily's List, which works towards igniting change by getting pro-choice Democratic women elected to office. The ammount of contributions made to this commitee also signifies a strong pro-women, pro-choice ideology present in the state.
+Here, we see a strong alingment to democratic ideology as 7 of the top ten committees that received contributions from individuals are Democrat. However, it is important to note that although a liberal idealogy is most common, there is still a  Republican presence shown through the Romney for President campaign, which received an almost equal amount of contributions as the Obama for America committee. Rick Perry was also a Republican entity that was present. There is also a Libretarian presence represented through the Ron Paul '12 Pres. Campaign. So, we can say there are a variety of political ideologies represented. Another important thing to note is that there are more contributions being made to presidential campaigns than those for the RNC, DNC, Democratic Senatorial Campaign Committee, etc. In this case, it is most important to individuals in Califonia to make monetary contributions to the face of America, the president, than it is to make contributions to other political branches such as the senate, congress, etc. This is interesting because typically, these branches of the government have the most say in regards to legislation and health care, the federal budget, etc. One last interesting point to make is the ammount of support directly made to the Obama campaign in this state, which demonstates the preferred presidential candidate.
 
 
 ### +1 for explaining in a single coherent sentence what we can learn from these data
