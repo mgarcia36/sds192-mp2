@@ -114,35 +114,14 @@ Why Alaska? In the year 2011, there were 12 red states, but Alaska was chosen be
 
 contributions_by_alaska <- contributions_by_state(state_arg = "AK")
 
-
-contributions_by_alaska <- individuals %>%
-  mutate(transaction_date = mdy(transaction_dt)) %>%
-  filter(state == "AK", 
-         entity_type == "IND",
-         transaction_date >= "2011-01-01",
-         transaction_date <= "2011-12-31",
-         transaction_amt >= 0 & transaction_amt <= 5000) %>%
-  inner_join(committees, by = "cmte_id") %>%
-  select(transaction_type, 
-         entity_type, 
-         state, 
-         transaction_date, 
-         transaction_amt,
-         cmte_name,
-         cmte_id)
-
-tallying_alaska <- contributions_by_alaska %>%
-  group_by(cmte_name) %>%
-  tally(sort = TRUE)
 ```
 
 ### +1 for explaining in a single coherent sentence what we can learn from these data
 During the 2011 federal election cycle, these were the top ten committees and the amount of money received, by each respectively, from contributions made by individuals in the state of Alaska.
 ```{r, fig.width = 15, fig.height = 8}
 
-# Using ggplot to generate bar plot of the "Top Ten Committees Donated to by Individuals in 2011"
+# Using ggplot to generate bar plot of "Committees that Received Contributions Made By Individuals in 2011"
 
-top_ten_cmte_alaska <- subset(contributions_by_alaska, cmte_name %in% tallying_alaska$cmte_name[0:10])
 
 Alaska_bar_chart <- ggplot(contributions_by_alaska, aes(cmte_name, com_groups)) +
   geom_bar(stat = "identity", fill = "olivedrab") +
@@ -164,12 +143,12 @@ Alaska_bar_chart <- ggplot(contributions_by_alaska, aes(cmte_name, com_groups)) 
   # Formatting the x-axis
   scale_x_discrete(name = "Recipients of Contributions",
                      expand = c(0,0),
-                     labels = c("ACTBLUE" = "ACTBLUE",
-                                "ALASKA DEMOCRATIC PARTY" = "AK DEM. PARTY",
+                     labels = c("ALASKA DEMOCRATIC PARTY" = "AK DEM. PARTY",
+                                "ALASKA REPUBLICAN PARTY" = "AK REP. PARTY",
                                 "ALASKANS FOR BEGICH 2014" = "AK FOR BEGICH '14",
                                 "ALASKANS FOR DON YOUNG INC." = "AK FOR DON YOUNG INC.",
                                 "DNC SERVICES CORPORATION/DEMOCRATIC NATIONAL COMMITTEE" = "DNC",
-                                "NATIONAL ASSOCIATION OF REALTORS POLITICAL ACTION COMMITTEE" = "NAT. ASSOC. OF REALTORS",
+                                "GCI PAC" = "GCI PAC",
                                 "OBAMA FOR AMERICA" = "OBAMA FOR AMERICA",
                                 "REPUBLICAN NATIONAL COMMITTEE" = "RNC",
                                 "ROMNEY FOR PRESIDENT INC." = "ROMNEY FOR \nPRESIDENT",
@@ -360,7 +339,7 @@ florida_plot <- ggplot(contributions_by_florida, aes(cmte_name, com_groups)) +
                                  )) +
   scale_y_continuous(name = "Total amt of contributions",
                      expand = c(0,0),
-                     labels = c("0" = "$0M",
+                     labels = c("0" = "$0",
                                 "1000000" = "$1M",
                                 "2000000" = "$2M",
                                 "3000000" = "$3M",
